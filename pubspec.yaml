@@ -1,0 +1,48 @@
+name: rincondelpan
+description: "A new Flutter project."
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+    sqflite: ^2.2.5+1
+  path_provider: ^2.0.13
+  path: ^1.8.0
+  image_picker: ^1.0.0
+  provider: ^6.0.5
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  assets:
+    - assets/img/logo.png
+    - assets/img/fondo.jpg
+    - assets/img/fondo2.jpeg
+    - assets/img/panico.png
+    - assets/img/empleados.png
+
+  fonts:
+    - family: Aleo
+      fonts:
+        - asset: assets/fonts/Aleo-VariableFont_wght.ttf
+
+    - family: Italianno
+      fonts:
+        - asset: assets/fonts/Italianno-Regular.ttf
+
+    - family: Amethysta
+      fonts:
+        - asset: assets/fonts/Amethysta-Regular.ttf
+
+  uses-material-design: true
