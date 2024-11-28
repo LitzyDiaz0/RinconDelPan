@@ -5,13 +5,35 @@ import './registro.dart';
 import './admnprinc.dart';
 import './editarempleado.dart';
 
-class AdministrarUsuariosPage extends StatelessWidget {
+class AdministrarUsuariosPage extends StatefulWidget {
   const AdministrarUsuariosPage({super.key});
 
-  // Método para obtener los usuarios desde la base de datos
-  Future<List<Usuario>> _obtenerUsuarios() async {
-    DatabaseHelper dbHelper = DatabaseHelper();
-    return await dbHelper.obtenerUsuarios();
+  @override
+  // ignore: library_private_types_in_public_api
+  _AdministrarUsuariosPageState createState() =>
+      _AdministrarUsuariosPageState();
+}
+
+class _AdministrarUsuariosPageState extends State<AdministrarUsuariosPage> {
+  late Future<List<Usuario>> _usuariosFuture;
+
+  // Inicializa la lista de usuarios al cargar la pantalla
+  @override
+  void initState() {
+    super.initState();
+    _cargarUsuarios();
+  }
+
+  // Método para cargar los usuarios
+  void _cargarUsuarios() {
+    _usuariosFuture = DatabaseHelper().obtenerUsuarios();
+  }
+
+  // Método para actualizar la lista después de cambios
+  void _actualizarUsuarios() {
+    setState(() {
+      _cargarUsuarios();
+    });
   }
 
   @override
@@ -115,7 +137,7 @@ class AdministrarUsuariosPage extends StatelessWidget {
           const SizedBox(height: 20),
           Expanded(
             child: FutureBuilder<List<Usuario>>(
-              future: _obtenerUsuarios(), // Aquí se obtienen los usuarios
+              future: _usuariosFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -169,7 +191,6 @@ class AdministrarUsuariosPage extends StatelessWidget {
                                           icon: const Icon(Icons.edit,
                                               color: Colors.white),
                                           onPressed: () {
-                                            // Pasar el usuario a la pantalla de edición
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -179,7 +200,9 @@ class AdministrarUsuariosPage extends StatelessWidget {
                                                   contrasena: '',
                                                 ),
                                               ),
-                                            );
+                                            ).then((_) {
+                                              _actualizarUsuarios(); // Actualizar usuarios al volver
+                                            });
                                           },
                                         ),
                                       ),
@@ -193,8 +216,51 @@ class AdministrarUsuariosPage extends StatelessWidget {
                                         child: IconButton(
                                           icon: const Icon(Icons.delete,
                                               color: Colors.white),
-                                          onPressed: () {
-                                            // Lógica para eliminar el usuario
+                                          onPressed: () async {
+                                            bool? confirmar =
+                                                await showDialog<bool>(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      'Confirmar eliminación'),
+                                                  content: const Text(
+                                                      '¿Estás seguro de que deseas eliminar este empleado?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(false),
+                                                      child: const Text(
+                                                          'Cancelar'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(true),
+                                                      child: const Text(
+                                                          'Eliminar'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+
+                                            if (confirmar == true) {
+                                              final dbHelper = DatabaseHelper();
+                                              await dbHelper.eliminarUsuario(
+                                                  usuario.idUsuario!);
+
+                                              // ignore: use_build_context_synchronously
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Empleado eliminado correctamente'),
+                                                ),
+                                              );
+                                              _actualizarUsuarios();
+                                            }
                                           },
                                         ),
                                       ),
