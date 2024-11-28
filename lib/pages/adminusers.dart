@@ -142,6 +142,7 @@ class AdministrarUsuariosPage extends StatelessWidget {
                             columns: const [
                               DataColumn(label: Text('Nombre')),
                               DataColumn(label: Text('Teléfono')),
+                              DataColumn(label: Text('Rol')),
                               DataColumn(label: Text('Turno')),
                               DataColumn(label: Text('Usuario')),
                               DataColumn(label: Text('Acciones')),
@@ -151,6 +152,7 @@ class AdministrarUsuariosPage extends StatelessWidget {
                                 cells: [
                                   DataCell(Text(usuario.nombre)),
                                   DataCell(Text(usuario.telefono)),
+                                  DataCell(Text(usuario.rol)),
                                   DataCell(Text(usuario.turno)),
                                   DataCell(Text(usuario.usuario)),
                                   DataCell(Row(
