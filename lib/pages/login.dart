@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import './registro.dart';
+import './admnprinc.dart'; // Asegúrate de que esta pantalla esté importada
+import './puntoventa.dart'; // Asegúrate de que esta pantalla esté importada
+import '../database/db_helper.dart'; // Importa tu DB helper si no lo has hecho
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +15,52 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController usuarioController = TextEditingController();
   final TextEditingController contrasenaController = TextEditingController();
   bool _obscurePassword = true; // Para ocultar/mostrar la contraseña
+
+  // Función de login
+  Future<void> _login() async {
+    String usuario = usuarioController.text;
+    String contrasena = contrasenaController.text;
+
+    if (usuario.isEmpty || contrasena.isEmpty) {
+      _mostrarMensaje('Por favor, ingresa usuario y contraseña.');
+      return;
+    }
+
+    // Buscar el usuario en la base de datos
+    var usuarioDb = await DatabaseHelper().obtenerUsuarioPorNombre(usuario);
+
+    if (usuarioDb == null || usuarioDb.contrasena != contrasena) {
+      _mostrarMensaje('Usuario o contraseña incorrectos.');
+    } else {
+      if (!mounted) return;
+
+      if (usuarioDb.rol.trim() == 'admin') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdminPage(rol: usuarioDb.rol), // Pasa el rol
+          ),
+        );
+      } else if (usuarioDb.rol.trim() == 'empleado') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                PuntoDeVentaPage(rol: usuarioDb.rol), // Pasa el rol
+          ),
+        );
+      } else {
+        _mostrarMensaje('Rol no válido.');
+      }
+    }
+  }
+
+  // Mostrar un mensaje en la pantalla (puede ser un snackbar o un alert)
+  void _mostrarMensaje(String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(mensaje)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +160,7 @@ class LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 40),
                     ElevatedButton(
-                      onPressed: () {}, // Botón sin acción
+                      onPressed: _login, // Llamar la función de login
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 10),
@@ -131,7 +181,15 @@ class LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {}, // Botón sin acción
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const RegistroPage(), // Asegúrate de que LoginPage esté importado
+                          ),
+                        );
+                      }, // Botón sin acción
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 40, vertical: 10),

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import '../models/usuario.dart';
+import '../database/db_helper.dart';
+import './login.dart';
 
 class RegistroPage extends StatefulWidget {
   const RegistroPage({super.key});
@@ -10,8 +14,66 @@ class RegistroPage extends StatefulWidget {
 
 class _RegistroPageState extends State<RegistroPage> {
   bool _passwordVisible = false;
-  final String _turnoSeleccionado = "M";
-  final String _rolSeleccionado = "empleado";
+  String _turnoSeleccionado = "M";
+  String _rolSeleccionado = "empleado";
+
+  // Controladores para los campos de texto
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _telefonoController = TextEditingController();
+  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
+
+  // Método para registrar el usuario
+  void _registrarUsuario() async {
+    String nombre = _nombreController.text;
+    String telefono = _telefonoController.text;
+    String usuario = _usuarioController.text;
+    String contrasena = _contrasenaController.text;
+    String turno = _turnoSeleccionado;
+    String rol = _rolSeleccionado;
+
+    // Asegúrate de validar los campos antes de insertar
+    if (nombre.isNotEmpty &&
+        telefono.isNotEmpty &&
+        usuario.isNotEmpty &&
+        contrasena.isNotEmpty) {
+      // Crear el objeto Usuario
+      Usuario nuevoUsuario = Usuario(
+        nombre: nombre,
+        telefono: telefono,
+        usuario: usuario,
+        contrasena: contrasena,
+        turno: turno,
+        rol: rol,
+      );
+
+      // Insertar el usuario en la base de datos
+      DatabaseHelper dbHelper = DatabaseHelper();
+      await dbHelper.insertarUsuario(nuevoUsuario);
+      var logger = Logger();
+
+      // Usar el logger para imprimir la información
+      logger.i(
+          'Usuario registrado: ${nuevoUsuario.nombre}, ${nuevoUsuario.telefono}, ${nuevoUsuario.usuario},  ${nuevoUsuario.rol}');
+
+      // Mostrar un mensaje de éxito o redirigir al usuario, por ejemplo
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuario registrado con éxito')),
+      );
+
+      // Si deseas limpiar los campos después del registro
+      _nombreController.clear();
+      _telefonoController.clear();
+      _usuarioController.clear();
+      _contrasenaController.clear();
+    } else {
+      // Mostrar un mensaje de error si algún campo está vacío
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, completa todos los campos')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +92,18 @@ class _RegistroPageState extends State<RegistroPage> {
                     IconButton(
                       icon: const Icon(
                         Icons.arrow_back,
-                        color: Colors.black,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
                       iconSize: 30,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const LoginPage(), // Asegúrate de que LoginPage esté importado
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -77,6 +147,7 @@ class _RegistroPageState extends State<RegistroPage> {
                           const SizedBox(height: 20),
                           // Campo Nombre
                           TextField(
+                            controller: _nombreController,
                             decoration: InputDecoration(
                               labelText: 'Nombre',
                               prefixIcon: const Icon(Icons.person),
@@ -88,6 +159,7 @@ class _RegistroPageState extends State<RegistroPage> {
                           const SizedBox(height: 15),
                           // Campo Teléfono
                           TextField(
+                            controller: _telefonoController,
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               labelText: 'Teléfono',
@@ -100,6 +172,7 @@ class _RegistroPageState extends State<RegistroPage> {
                           const SizedBox(height: 15),
                           // Campo Usuario
                           TextField(
+                            controller: _usuarioController,
                             decoration: InputDecoration(
                               labelText: 'Usuario',
                               prefixIcon: const Icon(Icons.account_circle),
@@ -111,6 +184,7 @@ class _RegistroPageState extends State<RegistroPage> {
                           const SizedBox(height: 15),
                           // Campo Contraseña
                           TextField(
+                            controller: _contrasenaController,
                             obscureText: !_passwordVisible,
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
@@ -146,7 +220,11 @@ class _RegistroPageState extends State<RegistroPage> {
                                 child: Text("Vespertino"),
                               ),
                             ],
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              setState(() {
+                                _turnoSeleccionado = value!;
+                              });
+                            },
                             decoration: InputDecoration(
                               labelText: 'Turno',
                               prefixIcon: const Icon(Icons.access_time),
@@ -155,6 +233,7 @@ class _RegistroPageState extends State<RegistroPage> {
                               ),
                             ),
                           ),
+
                           const SizedBox(height: 15),
                           // Lista Rol
                           DropdownButtonFormField<String>(
@@ -169,7 +248,11 @@ class _RegistroPageState extends State<RegistroPage> {
                                 child: Text("Empleado"),
                               ),
                             ],
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              setState(() {
+                                _rolSeleccionado = value!;
+                              });
+                            },
                             decoration: InputDecoration(
                               labelText: 'Rol',
                               prefixIcon: const Icon(Icons.person_outline),
@@ -178,10 +261,11 @@ class _RegistroPageState extends State<RegistroPage> {
                               ),
                             ),
                           ),
+
                           const SizedBox(height: 35),
                           // Botón Registrar
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _registrarUsuario,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: Colors.black,
