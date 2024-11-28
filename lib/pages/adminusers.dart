@@ -90,6 +90,7 @@ class _AdministrarUsuariosPageState extends State<AdministrarUsuariosPage> {
             style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Aleo',
               color: Color.fromRGBO(96, 60, 30, 1),
             ),
           ),

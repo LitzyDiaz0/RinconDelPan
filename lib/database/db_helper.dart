@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/usuario.dart';
+import '../models/producto.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -36,10 +37,23 @@ class DatabaseHelper {
             rol TEXT
           )
         ''');
+
+        // Tabla de productos
+        await db.execute('''
+        CREATE TABLE producto(
+            id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
+            imagen TEXT,
+            nombre TEXT,
+            sabor TEXT,
+            precio REAL,
+            stock INTEGER
+          )
+        ''');
       },
     );
   }
 
+//-----------------METODOS USUARIO
   // Insertar un nuevo usuario
   Future<int> insertarUsuario(Usuario usuario) async {
     final db = await database;
@@ -105,5 +119,59 @@ class DatabaseHelper {
       return Usuario.fromMap(maps.first);
     }
     return null;
+  }
+
+//------metodos productos
+//-----------------METODOS PRODUCTOS
+  // Insertar un nuevo producto
+  Future<int> insertarProducto(Producto producto) async {
+    final db = await database;
+    return await db.insert('producto', producto.toMap());
+  }
+
+  // Obtener todos los productos
+  Future<List<Producto>> obtenerProductos() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('producto');
+
+    return List.generate(maps.length, (i) {
+      return Producto.fromMap(maps[i]);
+    });
+  }
+
+  // Obtener un producto por su ID
+  Future<Producto?> obtenerProductoPorId(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'producto',
+      where: 'id_producto = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return Producto.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  // Actualizar un producto
+  Future<int> actualizarProducto(Producto producto) async {
+    final db = await database;
+    return await db.update(
+      'producto',
+      producto.toMap(),
+      where: 'id_producto = ?',
+      whereArgs: [producto.idProducto],
+    );
+  }
+
+  // Eliminar un producto
+  Future<int> eliminarProducto(int id) async {
+    final db = await database;
+    return await db.delete(
+      'producto',
+      where: 'id_producto = ?',
+      whereArgs: [id],
+    );
   }
 }
