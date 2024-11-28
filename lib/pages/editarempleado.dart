@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './adminusers.dart';
 
 class EditarEmpleadoPage extends StatelessWidget {
   const EditarEmpleadoPage({super.key});
@@ -16,7 +17,13 @@ class EditarEmpleadoPage extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             iconSize: 30,
             onPressed: () {
-              Navigator.pop(context); // Regresar a la página anterior
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const AdministrarUsuariosPage(), // Asegúrate de que LoginPage esté importado
+                ),
+              ); // Regresar a la página anterior
             },
           ),
           title: const Text(
