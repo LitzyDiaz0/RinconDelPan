@@ -23,7 +23,8 @@ class EditarEmpleadoPage extends StatelessWidget {
             'Editar Empleado',
             style: TextStyle(
               fontSize: 24,
-              color: Colors.black,
+              fontFamily: 'Aleo',
+              color: Color.fromARGB(255, 133, 64, 8),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -62,7 +63,10 @@ class EditarEmpleadoPage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text('Nombre:',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Aleo',
+                        )),
                   ),
                   TextField(
                     decoration: InputDecoration(
@@ -77,7 +81,9 @@ class EditarEmpleadoPage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text('Teléfono:',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Aleo')),
                   ),
                   TextField(
                     decoration: InputDecoration(
@@ -93,7 +99,9 @@ class EditarEmpleadoPage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text('Turno:',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Aleo')),
                   ),
                   TextField(
                     decoration: InputDecoration(
@@ -108,7 +116,9 @@ class EditarEmpleadoPage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text('Usuario:',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Aleo')),
                   ),
                   TextField(
                     decoration: InputDecoration(
