@@ -3,11 +3,30 @@ import './adminusers.dart';
 import '../database/db_helper.dart';
 import '../models/usuario.dart';
 
-class EditarEmpleadoPage extends StatelessWidget {
+class EditarEmpleadoPage extends StatefulWidget {
   final Usuario usuario; // Recibe el usuario a editar
-  final String contrasena; 
+  final String contrasena;
 
-  const EditarEmpleadoPage({super.key, required this.usuario, required this.contrasena}); // Constructor
+  const EditarEmpleadoPage(
+      {super.key, required this.usuario, required this.contrasena});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _EditarEmpleadoPageState createState() => _EditarEmpleadoPageState();
+}
+
+class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
+  // Opciones para el turno
+  List<String> turnos = ['Matutino', 'Vespertino'];
+  String? selectedTurno;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTurno = widget.usuario.turno == 'M'
+        ? 'Matutino'
+        : 'Vespertino'; // Inicializa con el turno actual
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +44,7 @@ class EditarEmpleadoPage extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const AdministrarUsuariosPage(),
+                  builder: (context) => const AdministrarUsuariosPage(),
                 ),
               );
             },
@@ -67,36 +85,33 @@ class EditarEmpleadoPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 children: [
-                  // Campo de texto para "Nombre"
                   const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Nombre:',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Aleo',
-                        )),
-                  ),
+                      alignment: Alignment.centerLeft,
+                      child: Text('Nombre:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Aleo',
+                          ))),
                   TextField(
-                    controller: TextEditingController(text: usuario.nombre),
+                    controller:
+                        TextEditingController(text: widget.usuario.nombre),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Campo de texto para "Teléfono"
                   const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Teléfono:',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Aleo')),
-                  ),
+                      alignment: Alignment.centerLeft,
+                      child: Text('Teléfono:',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Aleo'))),
                   TextField(
-                    controller: TextEditingController(text: usuario.telefono),
+                    controller:
+                        TextEditingController(text: widget.usuario.telefono),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
@@ -104,36 +119,42 @@ class EditarEmpleadoPage extends StatelessWidget {
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: 20),
-
-                  // Campo de texto para "Turno"
                   const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Turno:',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Aleo')),
-                  ),
-                  TextField(
-                    controller: TextEditingController(text: usuario.turno),
+                      alignment: Alignment.centerLeft,
+                      child: Text('Turno:',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Aleo'))),
+                  DropdownButtonFormField<String>(
+                    value: selectedTurno,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedTurno = newValue!;
+                      });
+                    },
+                    items: turnos.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Campo de texto para "Usuario"
                   const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Usuario:',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Aleo')),
-                  ),
+                      alignment: Alignment.centerLeft,
+                      child: Text('Usuario:',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Aleo'))),
                   TextField(
-                    controller: TextEditingController(text: usuario.usuario),
+                    controller:
+                        TextEditingController(text: widget.usuario.usuario),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
@@ -143,26 +164,28 @@ class EditarEmpleadoPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
-            // Botón para guardar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
                 onPressed: () async {
+                  // Convierte el turno seleccionado a 'M' o 'V'
+                  String turno = selectedTurno == 'Matutino' ? 'M' : 'V';
+
                   // Actualiza el usuario en la base de datos
                   Usuario updatedUsuario = Usuario(
-                    idUsuario: usuario.idUsuario,
-                    nombre: usuario.nombre, // Aquí debes obtener el valor actualizado
-                    telefono: usuario.telefono,
-                    usuario: usuario.usuario,
-                    contrasena: usuario.contrasena, // Puede ser que este también
-                    turno: usuario.turno,
-                    rol: usuario.rol,
+                    idUsuario: widget.usuario.idUsuario,
+                    nombre: widget.usuario
+                        .nombre, // Aquí debes obtener el valor actualizado
+                    telefono: widget.usuario.telefono,
+                    usuario: widget.usuario.usuario,
+                    contrasena: widget.contrasena,
+                    turno: turno, // Guarda 'M' o 'V'
+                    rol: widget.usuario.rol,
                   );
 
                   final dbHelper = DatabaseHelper();
                   await dbHelper.actualizarUsuario(updatedUsuario);
 
-                  // Regresar a la página de administración de usuarios
                   Navigator.pushReplacement(
                     // ignore: use_build_context_synchronously
                     context,
@@ -173,8 +196,8 @@ class EditarEmpleadoPage extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(237, 255, 225, 151),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 10, horizontal: 80),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 80),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                     side: const BorderSide(color: Colors.black, width: 1),

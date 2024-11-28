@@ -115,12 +115,16 @@ class AdministrarUsuariosPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditarEmpleadoPage(usuario: Usuario(
-                          nombre: "", 
-                          telefono: "", 
-                          rol: "", 
-                          turno: "", 
-                          usuario: "", contrasena: ''), contrasena: '',), // Usuario vacío como ejemplo
+                        builder: (context) => EditarEmpleadoPage(
+                          usuario: Usuario(
+                              nombre: "",
+                              telefono: "",
+                              rol: "",
+                              turno: "",
+                              usuario: "",
+                              contrasena: ''),
+                          contrasena: '',
+                        ), // Usuario vacío como ejemplo
                       ),
                     );
                   },
@@ -213,7 +217,9 @@ class AdministrarUsuariosPage extends StatelessWidget {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditarEmpleadoPage(
-                                                        usuario: usuario, contrasena: '',),
+                                                  usuario: usuario,
+                                                  contrasena: '',
+                                                ),
                                               ),
                                             );
                                           },
