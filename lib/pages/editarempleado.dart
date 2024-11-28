@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import './adminusers.dart';
+import '../database/db_helper.dart';
+import '../models/usuario.dart';
 
 class EditarEmpleadoPage extends StatelessWidget {
-  const EditarEmpleadoPage({super.key});
+  final Usuario usuario; // Recibe el usuario a editar
+  final String contrasena; 
+
+  const EditarEmpleadoPage({super.key, required this.usuario, required this.contrasena}); // Constructor
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +26,9 @@ class EditarEmpleadoPage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      const AdministrarUsuariosPage(), // Asegúrate de que LoginPage esté importado
+                      const AdministrarUsuariosPage(),
                 ),
-              ); // Regresar a la página anterior
+              );
             },
           ),
           title: const Text(
@@ -38,11 +43,9 @@ class EditarEmpleadoPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        // Esto permite que los elementos se desplacen
         child: Column(
           children: [
             const SizedBox(height: 20),
-            // Imagen centrada de "Empleado"
             Center(
               child: ClipOval(
                 child: Container(
@@ -53,20 +56,19 @@ class EditarEmpleadoPage extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    'assets/img/empleados.png', // Asegúrate de tener esta imagen en tu carpeta assets
+                    'assets/img/empleados.png',
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            // Campos de texto para editar el empleado
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 children: [
                   // Campo de texto para "Nombre"
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Nombre:',
                         style: TextStyle(
@@ -76,15 +78,16 @@ class EditarEmpleadoPage extends StatelessWidget {
                         )),
                   ),
                   TextField(
-                    decoration: InputDecoration(
+                    controller: TextEditingController(text: usuario.nombre),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(8), // Reducido el tamaño
+                      contentPadding: EdgeInsets.all(8),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Campo de texto para "Teléfono"
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Teléfono:',
                         style: TextStyle(
@@ -93,16 +96,17 @@ class EditarEmpleadoPage extends StatelessWidget {
                             fontFamily: 'Aleo')),
                   ),
                   TextField(
-                    decoration: InputDecoration(
+                    controller: TextEditingController(text: usuario.telefono),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(8), // Reducido el tamaño
+                      contentPadding: EdgeInsets.all(8),
                     ),
                     keyboardType: TextInputType.phone,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Campo de texto para "Turno"
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Turno:',
                         style: TextStyle(
@@ -111,15 +115,16 @@ class EditarEmpleadoPage extends StatelessWidget {
                             fontFamily: 'Aleo')),
                   ),
                   TextField(
-                    decoration: InputDecoration(
+                    controller: TextEditingController(text: usuario.turno),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(8), // Reducido el tamaño
+                      contentPadding: EdgeInsets.all(8),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Campo de texto para "Usuario"
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Usuario:',
                         style: TextStyle(
@@ -128,27 +133,48 @@ class EditarEmpleadoPage extends StatelessWidget {
                             fontFamily: 'Aleo')),
                   ),
                   TextField(
-                    decoration: InputDecoration(
+                    controller: TextEditingController(text: usuario.usuario),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(8), // Reducido el tamaño
+                      contentPadding: EdgeInsets.all(8),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 50), // Agregado para espacio adicional
-            // Botón para guardar (más largo)
+            const SizedBox(height: 50),
+            // Botón para guardar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
-                onPressed: () {
-                  // Aquí va la lógica para guardar el empleado
+                onPressed: () async {
+                  // Actualiza el usuario en la base de datos
+                  Usuario updatedUsuario = Usuario(
+                    idUsuario: usuario.idUsuario,
+                    nombre: usuario.nombre, // Aquí debes obtener el valor actualizado
+                    telefono: usuario.telefono,
+                    usuario: usuario.usuario,
+                    contrasena: usuario.contrasena, // Puede ser que este también
+                    turno: usuario.turno,
+                    rol: usuario.rol,
+                  );
+
+                  final dbHelper = DatabaseHelper();
+                  await dbHelper.actualizarUsuario(updatedUsuario);
+
+                  // Regresar a la página de administración de usuarios
+                  Navigator.pushReplacement(
+                    // ignore: use_build_context_synchronously
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AdministrarUsuariosPage(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(237, 255, 225, 151),
                   padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 80), // Aumento el padding vertical
+                      vertical: 10, horizontal: 80),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                     side: const BorderSide(color: Colors.black, width: 1),

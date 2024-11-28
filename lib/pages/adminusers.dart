@@ -108,12 +108,19 @@ class AdministrarUsuariosPage extends StatelessWidget {
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
+                const SizedBox(width: 16),
                 ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    // Aquí estaba el error, ahora te paso el usuario correctamente.
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EditarEmpleadoPage(),
+                        builder: (context) => EditarEmpleadoPage(usuario: Usuario(
+                          nombre: "", 
+                          telefono: "", 
+                          rol: "", 
+                          turno: "", 
+                          usuario: "", contrasena: ''), contrasena: '',), // Usuario vacío como ejemplo
                       ),
                     );
                   },
@@ -133,7 +140,7 @@ class AdministrarUsuariosPage extends StatelessWidget {
                       border: Border.all(color: Colors.black, width: 2),
                     ),
                     padding: const EdgeInsets.all(2.0),
-                    child: const Icon(Icons.add, color: Colors.black),
+                    child: const Icon(Icons.edit, color: Colors.black),
                   ),
                   label: const Text(
                     'Editar empleado prueba',
@@ -200,7 +207,15 @@ class AdministrarUsuariosPage extends StatelessWidget {
                                           icon: const Icon(Icons.edit,
                                               color: Colors.white),
                                           onPressed: () {
-                                            // Lógica para editar el usuario
+                                            // Pasar el usuario a la pantalla de edición
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditarEmpleadoPage(
+                                                        usuario: usuario, contrasena: '',),
+                                              ),
+                                            );
                                           },
                                         ),
                                       ),
