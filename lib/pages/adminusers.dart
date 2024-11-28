@@ -109,48 +109,6 @@ class AdministrarUsuariosPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Aquí estaba el error, ahora te paso el usuario correctamente.
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditarEmpleadoPage(
-                          usuario: Usuario(
-                              nombre: "",
-                              telefono: "",
-                              rol: "",
-                              turno: "",
-                              usuario: "",
-                              contrasena: ''),
-                          contrasena: '',
-                        ), // Usuario vacío como ejemplo
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: const BorderSide(color: Colors.black, width: 1),
-                    ),
-                  ),
-                  icon: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 2),
-                    ),
-                    padding: const EdgeInsets.all(2.0),
-                    child: const Icon(Icons.edit, color: Colors.black),
-                  ),
-                  label: const Text(
-                    'Editar empleado prueba',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
               ],
             ),
           ),

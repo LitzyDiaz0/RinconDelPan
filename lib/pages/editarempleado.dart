@@ -19,13 +19,30 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
   // Opciones para el turno
   List<String> turnos = ['Matutino', 'Vespertino'];
   String? selectedTurno;
+  late TextEditingController _nombreController;
+  late TextEditingController _telefonoController;
+  late TextEditingController _turnoController;
+  late TextEditingController _usuarioController;
 
   @override
   void initState() {
     super.initState();
+    _nombreController = TextEditingController(text: widget.usuario.nombre);
+    _telefonoController = TextEditingController(text: widget.usuario.telefono);
+    _turnoController = TextEditingController(text: widget.usuario.turno);
+    _usuarioController = TextEditingController(text: widget.usuario.usuario);
     selectedTurno = widget.usuario.turno == 'M'
         ? 'Matutino'
         : 'Vespertino'; // Inicializa con el turno actual
+  }
+
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    _telefonoController.dispose();
+    _turnoController.dispose();
+    _usuarioController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,15 +104,14 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                 children: [
                   const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Nombre:',
+                      child: Text('Nombre: ',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Aleo',
                           ))),
                   TextField(
-                    controller:
-                        TextEditingController(text: widget.usuario.nombre),
+                    controller: _nombreController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
@@ -104,14 +120,13 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                   const SizedBox(height: 20),
                   const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Teléfono:',
+                      child: Text('Teléfono: ',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Aleo'))),
                   TextField(
-                    controller:
-                        TextEditingController(text: widget.usuario.telefono),
+                    controller: _telefonoController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
@@ -121,7 +136,7 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                   const SizedBox(height: 20),
                   const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Turno:',
+                      child: Text('Turno: ',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -130,7 +145,7 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                     value: selectedTurno,
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedTurno = newValue!;
+                        selectedTurno = newValue;
                       });
                     },
                     items: turnos.map<DropdownMenuItem<String>>((String value) {
@@ -147,14 +162,13 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                   const SizedBox(height: 20),
                   const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Usuario:',
+                      child: Text('Usuario: ',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Aleo'))),
                   TextField(
-                    controller:
-                        TextEditingController(text: widget.usuario.usuario),
+                    controller: _usuarioController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
@@ -174,10 +188,10 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                   // Actualiza el usuario en la base de datos
                   Usuario updatedUsuario = Usuario(
                     idUsuario: widget.usuario.idUsuario,
-                    nombre: widget.usuario
-                        .nombre, // Aquí debes obtener el valor actualizado
-                    telefono: widget.usuario.telefono,
-                    usuario: widget.usuario.usuario,
+                    nombre: _nombreController
+                        .text, // Aquí se obtiene el valor actualizado
+                    telefono: _telefonoController.text,
+                    usuario: _usuarioController.text,
                     contrasena: widget.contrasena,
                     turno: turno, // Guarda 'M' o 'V'
                     rol: widget.usuario.rol,
