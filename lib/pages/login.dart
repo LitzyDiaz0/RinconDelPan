@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import './registro.dart';
 import './admnprinc.dart'; // Asegúrate de que esta pantalla esté importada
 import './puntoventa.dart'; // Asegúrate de que esta pantalla esté importada
 import '../database/db_helper.dart'; // Importa tu DB helper si no lo has hecho
@@ -177,35 +176,6 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text(
                         'Aceptar',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const RegistroPage(), // Asegúrate de que LoginPage esté importado
-                          ),
-                        );
-                      }, // Botón sin acción
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 10),
-                        textStyle: const TextStyle(fontSize: 18),
-                        backgroundColor: const Color.fromARGB(
-                            255, 255, 255, 255), // Fondo blanco del botón
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        side: const BorderSide(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                      ),
-                      child: const Text(
-                        'Registrarse',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../models/usuario.dart';
 import '../database/db_helper.dart';
-import './login.dart';
+import './adminusers.dart';
 
 class RegistroPage extends StatefulWidget {
   const RegistroPage({super.key});
@@ -100,7 +100,7 @@ class _RegistroPageState extends State<RegistroPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const LoginPage(), // Asegúrate de que LoginPage esté importado
+                                const AdministrarUsuariosPage(), // Asegúrate de que LoginPage esté importado
                           ),
                         );
                       },

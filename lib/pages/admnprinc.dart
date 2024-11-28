@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import './login.dart';
+import './puntoventa.dart';
+import './adminusers.dart';
 
 class AdminPage extends StatelessWidget {
   final String rol; // Aceptar el rol
@@ -83,15 +85,15 @@ class AdminPage extends StatelessWidget {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          // Lógica para Punto de Venta
-                          // Navigator.pushReplacement(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const PuntoDeVentaPage(
-                          //       rol: '',
-                          //     ),
-                          //   ),
-                          // );
+                          //Lógica para Punto de Venta
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PuntoDeVentaPage(
+                                rol: '',
+                              ),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -212,13 +214,13 @@ class AdminPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // Lógica para Administrar Empleados
-                          // Navigator.pushReplacement(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         AdministrarUsuariosPage(), // Asegúrate de que LoginPage esté importado
-                          //   ),
-                          // );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const AdministrarUsuariosPage(), // Asegúrate de que LoginPage esté importado
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
