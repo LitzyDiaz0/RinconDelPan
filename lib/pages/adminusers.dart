@@ -223,7 +223,7 @@ class _AdministrarUsuariosPageState extends State<AdministrarUsuariosPage> {
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   title: const Text(
-                                                      'Confirmar eliminación'),
+                                                      'Confirmación'),
                                                   content: const Text(
                                                       '¿Estás seguro de que deseas eliminar este empleado?'),
                                                   actions: <Widget>[
