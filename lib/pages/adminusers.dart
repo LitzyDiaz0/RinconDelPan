@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import '../models/usuario.dart';
+import '../database/db_helper.dart';
 import './registro.dart';
 import './admnprinc.dart';
 
 class AdministrarUsuariosPage extends StatelessWidget {
   const AdministrarUsuariosPage({super.key});
+
+  // Método para obtener los usuarios desde la base de datos
+  Future<List<Usuario>> _obtenerUsuarios() async {
+    DatabaseHelper dbHelper = DatabaseHelper();
+    return await dbHelper.obtenerUsuarios();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +34,7 @@ class AdministrarUsuariosPage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AdminPage(
-                            rol: '',
-                          ), // Asegúrate de que LoginPage esté importado
+                          builder: (context) => const AdminPage(rol: ''),
                         ),
                       );
                     },
@@ -74,11 +80,9 @@ class AdministrarUsuariosPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const RegistroPage(), // Asegúrate de que LoginPage esté importado
+                        builder: (context) => const RegistroPage(),
                       ),
                     );
-                    // Lógica eliminada
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -108,69 +112,90 @@ class AdministrarUsuariosPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: DataTable(
-                      columnSpacing: 15,
-                      // ignore: deprecated_member_use
-                      dataRowHeight: 60,
-                      columns: const [
-                        DataColumn(label: Text('Nombre')),
-                        DataColumn(label: Text('Teléfono')),
-                        DataColumn(label: Text('Turno')),
-                        DataColumn(label: Text('Usuario')),
-                        DataColumn(label: Text('Acciones')),
-                      ],
-                      rows: [
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Usuario 1')),
-                            const DataCell(Text('123456789')),
-                            const DataCell(Text('Mañana')),
-                            const DataCell(Text('usuario1')),
-                            DataCell(Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const IconButton(
-                                    icon: Icon(Icons.edit, color: Colors.white),
-                                    onPressed: null, // Lógica eliminada
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.pink,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const IconButton(
-                                    icon:
-                                        Icon(Icons.delete, color: Colors.white),
-                                    onPressed: null, // Lógica eliminada
-                                  ),
-                                ),
-                              ],
-                            )),
-                          ],
+            child: FutureBuilder<List<Usuario>>(
+              future: _obtenerUsuarios(), // Aquí se obtienen los usuarios
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                      child: Text('No hay empleados registrados.'));
+                } else {
+                  List<Usuario> usuarios = snapshot.data!;
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: DataTable(
+                            columnSpacing: 15,
+                            // ignore: deprecated_member_use
+                            dataRowHeight: 60,
+                            columns: const [
+                              DataColumn(label: Text('Nombre')),
+                              DataColumn(label: Text('Teléfono')),
+                              DataColumn(label: Text('Turno')),
+                              DataColumn(label: Text('Usuario')),
+                              DataColumn(label: Text('Acciones')),
+                            ],
+                            rows: usuarios.map((usuario) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(Text(usuario.nombre)),
+                                  DataCell(Text(usuario.telefono)),
+                                  DataCell(Text(usuario.turno)),
+                                  DataCell(Text(usuario.usuario)),
+                                  DataCell(Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.orange,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.edit,
+                                              color: Colors.white),
+                                          onPressed: () {
+                                            // Lógica para editar el usuario
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.pink,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.white),
+                                          onPressed: () {
+                                            // Lógica para eliminar el usuario
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                                ],
+                              );
+                            }).toList(),
+                          ),
                         ),
-                        // Puedes agregar más filas como ejemplo
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
+                  );
+                }
+              },
             ),
           ),
         ],
