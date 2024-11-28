@@ -3,6 +3,7 @@ import '../models/usuario.dart';
 import '../database/db_helper.dart';
 import './registro.dart';
 import './admnprinc.dart';
+import './editarempleado.dart';
 
 class AdministrarUsuariosPage extends StatelessWidget {
   const AdministrarUsuariosPage({super.key});
@@ -104,6 +105,38 @@ class AdministrarUsuariosPage extends StatelessWidget {
                   ),
                   label: const Text(
                     'Agregar Empleado',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditarEmpleadoPage(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(color: Colors.black, width: 1),
+                    ),
+                  ),
+                  icon: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black, width: 2),
+                    ),
+                    padding: const EdgeInsets.all(2.0),
+                    child: const Icon(Icons.add, color: Colors.black),
+                  ),
+                  label: const Text(
+                    'Editar empleado prueba',
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
