@@ -24,7 +24,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'panaderia.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Asegúrate de incrementar la versión
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE usuario(
@@ -38,15 +38,9 @@ class DatabaseHelper {
           )
         ''');
 
-        // Insertar usuario administrador por defecto
-        await db.execute('''
-        INSERT INTO usuario (nombre, telefono, usuario, contrasena, turno, rol) 
-        VALUES ('Luna', '4493215678', 'admin', 'admin123', 'M', 'admin')
-      ''');
-
         // Tabla de productos
         await db.execute('''
-        CREATE TABLE producto(
+          CREATE TABLE producto(
             id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
             imagen TEXT,
             nombre TEXT,
@@ -55,6 +49,22 @@ class DatabaseHelper {
             stock INTEGER
           )
         ''');
+
+        // Insertar usuario administrador por defecto
+        await db.insert('usuario', {
+          'nombre': 'Luna',
+          'telefono': '4493215678',
+          'usuario': 'admin',
+          'contrasena': 'admin123',
+          'turno': 'M',
+          'rol': 'admin',
+        });
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          // Si tienes que hacer alguna actualización, hazla aquí
+          // Por ejemplo, agregar columnas o datos por defecto
+        }
       },
     );
   }
