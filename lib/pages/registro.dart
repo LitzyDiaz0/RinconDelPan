@@ -54,7 +54,7 @@ class _RegistroPageState extends State<RegistroPage> {
 
       // Usar el logger para imprimir la información
       logger.i(
-          'Usuario registrado: ${nuevoUsuario.nombre}, ${nuevoUsuario.telefono}, ${nuevoUsuario.usuario},  ${nuevoUsuario.rol}');
+          'Usuario registrado: ${nuevoUsuario.nombre}, ${nuevoUsuario.telefono}, ${nuevoUsuario.usuario},  ${nuevoUsuario.rol},${nuevoUsuario.contrasena} ');
 
       // Mostrar un mensaje de éxito o redirigir al usuario, por ejemplo
       // ignore: use_build_context_synchronously
@@ -265,6 +265,7 @@ class _RegistroPageState extends State<RegistroPage> {
                           const SizedBox(height: 35),
                           // Botón Registrar
                           ElevatedButton(
+                            
                             onPressed: _registrarUsuario,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -286,6 +287,7 @@ class _RegistroPageState extends State<RegistroPage> {
                                 color: Colors.black,
                               ),
                             ),
+                            
                           ),
                         ],
                       ),

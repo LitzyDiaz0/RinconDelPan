@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import './admnprinc.dart'; // Asegúrate de que esta pantalla esté importada
-import './puntoventa.dart'; // Asegúrate de que esta pantalla esté importada
-import '../database/db_helper.dart'; // Importa tu DB helper si no lo has hecho
+import './admnprinc.dart';
+import './puntoventa.dart';
+import '../database/db_helper.dart';
+import './registro.dart';
+import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,8 +19,8 @@ class LoginPageState extends State<LoginPage> {
 
   // Función de login
   Future<void> _login() async {
-    String usuario = usuarioController.text;
-    String contrasena = contrasenaController.text;
+    String usuario = usuarioController.text.trim();
+    String contrasena = contrasenaController.text.trim();
 
     if (usuario.isEmpty || contrasena.isEmpty) {
       _mostrarMensaje('Por favor, ingresa usuario y contraseña.');
@@ -26,10 +28,15 @@ class LoginPageState extends State<LoginPage> {
     }
 
     // Buscar el usuario en la base de datos
-    var usuarioDb = await DatabaseHelper().obtenerUsuarioPorNombre(usuario);
+    var usuarioDb = await DatabaseHelper().obtenerUsuario(usuario, contrasena);
 
     if (usuarioDb == null || usuarioDb.contrasena != contrasena) {
       _mostrarMensaje('Usuario o contraseña incorrectos.');
+      var logger = Logger();
+
+      // Usar el logger para imprimir la información
+      logger.i(
+          'Usuario encontrado: ${usuarioDb?.usuario},contasena:${usuarioDb?.rol}');
     } else {
       if (!mounted) return;
 
@@ -37,7 +44,8 @@ class LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => AdminPage(rol: usuarioDb.rol), // Pasa el rol
+            builder: (context) =>
+                AdminPage(rol: usuarioDb.contrasena), // Pasa el rol
           ),
         );
       } else if (usuarioDb.rol.trim() == 'empleado') {
@@ -176,6 +184,38 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text(
                         'Aceptar',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegistroPage(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: const BorderSide(color: Colors.black, width: 1),
+                        ),
+                      ),
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black, width: 2),
+                        ),
+                        padding: const EdgeInsets.all(2.0),
+                        child: const Icon(Icons.add, color: Colors.black),
+                      ),
+                      label: const Text(
+                        'Agregar Empleado',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),

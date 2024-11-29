@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './login.dart';
 import './puntoventa.dart';
 import './adminusers.dart';
+import './inventario.dart';
 
 class AdminPage extends StatelessWidget {
   final String rol; // Aceptar el rol
@@ -134,6 +135,13 @@ class AdminPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // Lógica para Ver Inventario
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const InventarioPage(), // Asegúrate de que LoginPage esté importado
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

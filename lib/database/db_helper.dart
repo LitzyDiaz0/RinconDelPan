@@ -38,6 +38,12 @@ class DatabaseHelper {
           )
         ''');
 
+        // Insertar usuario administrador por defecto
+        await db.execute('''
+        INSERT INTO usuario (nombre, telefono, usuario, contrasena, turno, rol) 
+        VALUES ('Luna', '4493215678', 'admin', 'admin123', 'M', 'admin')
+      ''');
+
         // Tabla de productos
         await db.execute('''
         CREATE TABLE producto(
@@ -92,7 +98,7 @@ class DatabaseHelper {
       'usuario',
       usuario.toMap(),
       where: 'id_usuario = ?',
-      whereArgs: [usuario.idUsuario],
+      whereArgs: [usuario.idUsuario ?? -1],
     );
   }
 
@@ -107,18 +113,18 @@ class DatabaseHelper {
   }
 
 //obtenerUsuarioPorNombre
-  Future<Usuario?> obtenerUsuarioPorNombre(String nombre) async {
+  Future<Usuario?> obtenerUsuario(String usuario, String contrasena) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'usuario', // Cambiado de 'usuarios' a 'usuario'
-      where: 'usuario = ?',
-      whereArgs: [nombre],
+    final res = await db.query(
+      'usuario',
+      where: 'usuario = ? AND contrasena = ?',
+      whereArgs: [usuario, contrasena],
     );
-
-    if (maps.isNotEmpty) {
-      return Usuario.fromMap(maps.first);
+    if (res.isNotEmpty) {
+      return Usuario.fromMap(res.first);
+    } else {
+      return null;
     }
-    return null;
   }
 
 //------metodos productos

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart'; // Importa Logger
 import './adminusers.dart';
 import '../database/db_helper.dart';
 import '../models/usuario.dart';
 
 class EditarEmpleadoPage extends StatefulWidget {
   final Usuario usuario; // Recibe el usuario a editar
-  final String contrasena;
+  final String contrasena; // Recibe la contraseña actual
 
   const EditarEmpleadoPage(
       {super.key, required this.usuario, required this.contrasena});
 
   @override
-  // ignore: library_private_types_in_public_api
   _EditarEmpleadoPageState createState() => _EditarEmpleadoPageState();
 }
 
@@ -23,6 +23,7 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
   late TextEditingController _telefonoController;
   late TextEditingController _turnoController;
   late TextEditingController _usuarioController;
+  late TextEditingController _contrasenaController;
 
   @override
   void initState() {
@@ -31,9 +32,9 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
     _telefonoController = TextEditingController(text: widget.usuario.telefono);
     _turnoController = TextEditingController(text: widget.usuario.turno);
     _usuarioController = TextEditingController(text: widget.usuario.usuario);
-    selectedTurno = widget.usuario.turno == 'M'
-        ? 'Matutino'
-        : 'Vespertino'; // Inicializa con el turno actual
+    _contrasenaController =
+        TextEditingController(text: widget.usuario.contrasena);
+    selectedTurno = widget.usuario.turno == 'M' ? 'Matutino' : 'Vespertino';
   }
 
   @override
@@ -42,6 +43,7 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
     _telefonoController.dispose();
     _turnoController.dispose();
     _usuarioController.dispose();
+    _contrasenaController.dispose();
     super.dispose();
   }
 
@@ -173,6 +175,24 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.all(8),
                     ),
+                    enabled: false, // Desactiva la edición
+                  ),
+                  const SizedBox(height: 20),
+                  const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Contraseña: ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Aleo'))),
+                  TextField(
+                    controller: _contrasenaController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(8),
+                    ),
+                    enabled: false, // Desactiva la edición
+                    obscureText: true, // Muestra los asteriscos
                   ),
                 ],
               ),
@@ -185,21 +205,40 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                   // Convierte el turno seleccionado a 'M' o 'V'
                   String turno = selectedTurno == 'Matutino' ? 'M' : 'V';
 
-                  // Actualiza el usuario en la base de datos
+                  // Crea un usuario actualizado
+                  // Aseguramos que la contraseña que no se edita se conserve sin cambios.
+                  String contrasenaFinal = widget.contrasena.isNotEmpty
+                      ? widget.contrasena
+                      : widget.usuario.contrasena;
+
                   Usuario updatedUsuario = Usuario(
                     idUsuario: widget.usuario.idUsuario,
-                    nombre: _nombreController
-                        .text, // Aquí se obtiene el valor actualizado
+                    nombre: _nombreController.text,
                     telefono: _telefonoController.text,
-                    usuario: _usuarioController.text,
-                    contrasena: widget.contrasena,
+                    usuario: widget
+                        .usuario.usuario, // No permite modificar el usuario
+                    contrasena:
+                        contrasenaFinal, // Utilizamos la contraseña sin cambios
                     turno: turno, // Guarda 'M' o 'V'
                     rol: widget.usuario.rol,
                   );
 
+                  // Configura el logger
+                  var logger = Logger();
+                  logger.i("Información que se enviará a la base de datos:");
+                  logger.i("ID Usuario: ${updatedUsuario.idUsuario}");
+                  logger.i("Nombre: ${updatedUsuario.nombre}");
+                  logger.i("Teléfono: ${updatedUsuario.telefono}");
+                  logger.i("Turno: ${updatedUsuario.turno}");
+                  logger.i("Usuario: ${updatedUsuario.usuario}");
+                  logger.i("Contraseña: ${updatedUsuario.contrasena}");
+                  logger.i("Rol: ${updatedUsuario.rol}");
+
+                  // Actualiza el usuario en la base de datos
                   final dbHelper = DatabaseHelper();
                   await dbHelper.actualizarUsuario(updatedUsuario);
 
+                  // Navega a la página de administración de usuarios
                   Navigator.pushReplacement(
                     // ignore: use_build_context_synchronously
                     context,
