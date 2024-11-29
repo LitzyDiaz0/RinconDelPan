@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './admnprinc.dart';
+import './agregarpan.dart';
 
 class InventarioPage extends StatelessWidget {
   const InventarioPage({super.key});
@@ -20,7 +22,16 @@ class InventarioPage extends StatelessWidget {
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     iconSize: 40,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AdminPage(
+                            rol: '',
+                          ), // Asegúrate de que LoginPage esté importado
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -56,7 +67,16 @@ class InventarioPage extends StatelessWidget {
             child: Row(
               children: [
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    //ir a agregar proucto
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const AgregarPanPage(), // Asegúrate de que LoginPage esté importado
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(

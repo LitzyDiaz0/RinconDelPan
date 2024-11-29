@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import './admnprinc.dart';
 import './puntoventa.dart';
 import '../database/db_helper.dart';
-import './registro.dart';
 import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
@@ -184,38 +183,6 @@ class LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text(
                         'Aceptar',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegistroPage(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: const BorderSide(color: Colors.black, width: 1),
-                        ),
-                      ),
-                      icon: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black, width: 2),
-                        ),
-                        padding: const EdgeInsets.all(2.0),
-                        child: const Icon(Icons.add, color: Colors.black),
-                      ),
-                      label: const Text(
-                        'Agregar Empleado',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
