@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
 import './admnprinc.dart';
 import './agregarpan.dart';
+import '../database/db_helper.dart';
 
-class InventarioPage extends StatelessWidget {
+class InventarioPage extends StatefulWidget {
   const InventarioPage({super.key});
+
+  @override
+  State<InventarioPage> createState() => _InventarioPageState();
+}
+
+class _InventarioPageState extends State<InventarioPage> {
+  final DatabaseHelper dbHelper = DatabaseHelper();
+  // Instancia del helper de la base de datos
+  List<Map<String, dynamic>> productos =
+      []; // Lista para almacenar los productos
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarProductos(); // Cargar productos al iniciar la pantalla
+  }
+
+  // Método para cargar productos desde la base de datos
+  Future<void> _cargarProductos() async {
+    final data = await dbHelper.obtenerProductos();
+    setState(() {
+      productos = data.map((producto) => producto.toMap()).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +51,7 @@ class InventarioPage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AdminPage(
-                            rol: '',
-                          ), // Asegúrate de que LoginPage esté importado
+                          builder: (context) => const AdminPage(rol: ''),
                         ),
                       );
                     },
@@ -68,12 +91,10 @@ class InventarioPage extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   onPressed: () {
-                    //ir a agregar proucto
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const AgregarPanPage(), // Asegúrate de que LoginPage esté importado
+                        builder: (context) => const AgregarPanPage(),
                       ),
                     );
                   },
@@ -128,13 +149,13 @@ class InventarioPage extends StatelessWidget {
                         DataColumn(label: Text('Stock')),
                         DataColumn(label: Text('Acciones')),
                       ],
-                      rows: [
-                        DataRow(
+                      rows: productos.map((producto) {
+                        return DataRow(
                           cells: [
-                            const DataCell(Text('Concha')),
-                            const DataCell(Text('Fresa')),
-                            const DataCell(Text('8')),
-                            const DataCell(Text('9')),
+                            DataCell(Text(producto['nombre'] ?? '')),
+                            DataCell(Text(producto['sabor'] ?? '')),
+                            DataCell(Text(producto['precio'].toString())),
+                            DataCell(Text(producto['stock'].toString())),
                             DataCell(Row(
                               children: [
                                 Container(
@@ -145,7 +166,9 @@ class InventarioPage extends StatelessWidget {
                                   child: IconButton(
                                     icon: const Icon(Icons.edit,
                                         color: Colors.white),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      // Implementar lógica para editar producto
+                                    },
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -157,14 +180,16 @@ class InventarioPage extends StatelessWidget {
                                   child: IconButton(
                                     icon: const Icon(Icons.delete,
                                         color: Colors.white),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      // Implementar lógica para eliminar producto
+                                    },
                                   ),
                                 ),
                               ],
                             )),
                           ],
-                        ),
-                      ],
+                        );
+                      }).toList(),
                     ),
                   ),
                 ),

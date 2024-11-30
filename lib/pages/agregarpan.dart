@@ -1,8 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:logger/logger.dart';
 import './inventario.dart';
+import '../database/db_helper.dart'; // Asegúrate de importar tu DBHelper
+import '../models/producto.dart'; // Asegúrate de importar el modelo Producto
 
-class AgregarPanPage extends StatelessWidget {
+class AgregarPanPage extends StatefulWidget {
   const AgregarPanPage({super.key});
+
+  @override
+  State<AgregarPanPage> createState() => _AgregarPanPageState();
+}
+
+class _AgregarPanPageState extends State<AgregarPanPage> {
+  final _nombreController = TextEditingController();
+  final _saborController = TextEditingController();
+  final _precioController = TextEditingController();
+  final _stockController = TextEditingController();
+  File? _selectedImage;
+
+  final dbHelper = DatabaseHelper();
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _agregarProducto() async {
+    final String nombre = _nombreController.text;
+    final String sabor = _saborController.text;
+    final double? precio = double.tryParse(_precioController.text);
+    final int? stock = int.tryParse(_stockController.text);
+
+    if (nombre.isEmpty ||
+        sabor.isEmpty ||
+        precio == null ||
+        stock == null ||
+        _selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, completa todos los campos')),
+      );
+      return;
+    }
+
+    // Crear el producto
+    final Producto nuevoProducto = Producto(
+      nombre: nombre,
+      sabor: sabor,
+      precio: precio,
+      stock: stock,
+      imagen: _selectedImage!.path,
+    );
+
+    // Insertar en la base de datos
+    await dbHelper.insertarProducto(nuevoProducto);
+    var logger = Logger();
+
+    // Usar el logger para imprimir la información
+    logger.i(
+        'Producto registrado: ${nuevoProducto.nombre}, ${nuevoProducto.sabor}, ${nuevoProducto.precio},  ${nuevoProducto.stock},${nuevoProducto.imagen} ');
+
+    // Mostrar confirmación y regresar al inventario
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Producto agregado exitosamente')),
+    );
+
+    Navigator.pushReplacement(
+      // ignore: use_build_context_synchronously
+      context,
+      MaterialPageRoute(builder: (context) => const InventarioPage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,27 +112,20 @@ class AgregarPanPage extends StatelessWidget {
                 child: SizedBox(
                   width: 150,
                   height: 150,
-                  child: Image.asset(
-                    'assets/img/logo.png',
-                    fit: BoxFit.cover,
-                  ),
+                  child: _selectedImage == null
+                      ? Image.asset(
+                          'assets/img/logo.png',
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          _selectedImage!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),
-            const Text(
-              'Agregar Pan',
-              style: TextStyle(
-                fontSize: 30,
-                fontFamily: 'Aleo',
-                color: Color.fromRGBO(96, 60, 30, 1),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: () {
-                // Aquí se implementará la lógica para abrir la galería/cámara
-              },
+              onPressed: _pickImage,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(
                     255, 240, 240, 240), // Fondo gris claro
@@ -96,25 +166,31 @@ class AgregarPanPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTextField('Nombre del pan:', fontSize: 14),
+                      _buildTextField(
+                        'Nombre del pan:',
+                        controller: _nombreController,
+                      ),
                       const SizedBox(height: 16),
-                      _buildTextField('Sabor:', fontSize: 10),
+                      _buildTextField(
+                        'Sabor:',
+                        controller: _saborController,
+                      ),
                       const SizedBox(height: 16),
                       Row(
                         children: [
                           Expanded(
                             child: _buildTextField(
                               'Precio:',
+                              controller: _precioController,
                               keyboardType: TextInputType.number,
-                              fontSize: 14,
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: _buildTextField(
                               'Stock:',
+                              controller: _stockController,
                               keyboardType: TextInputType.number,
-                              fontSize: 14,
                             ),
                           ),
                         ],
@@ -122,9 +198,7 @@ class AgregarPanPage extends StatelessWidget {
                       const SizedBox(height: 32),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Acción de agregar pan
-                          },
+                          onPressed: _agregarProducto,
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
                             backgroundColor:
@@ -156,8 +230,8 @@ class AgregarPanPage extends StatelessWidget {
 
   Widget _buildTextField(
     String label, {
+    required TextEditingController controller,
     TextInputType keyboardType = TextInputType.text,
-    double fontSize = 16,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -175,8 +249,8 @@ class AgregarPanPage extends StatelessWidget {
         ],
       ),
       child: TextField(
+        controller: controller,
         keyboardType: keyboardType,
-        style: TextStyle(fontSize: fontSize),
         decoration: InputDecoration(
           labelText: label,
           border: InputBorder.none,

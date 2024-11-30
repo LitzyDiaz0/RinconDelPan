@@ -137,7 +137,6 @@ class DatabaseHelper {
     }
   }
 
-//------metodos productos
 //-----------------METODOS PRODUCTOS
   // Insertar un nuevo producto
   Future<int> insertarProducto(Producto producto) async {
