@@ -45,7 +45,7 @@ class _AdministrarUsuariosPageState extends State<AdministrarUsuariosPage> {
           // Barra de navegación
           Container(
             height: 80,
-            color: const Color.fromARGB(255, 135, 71, 15),
+            color: const Color.fromARGB(255, 110, 55, 7),
             child: Row(
               children: [
                 Padding(

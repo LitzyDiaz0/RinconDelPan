@@ -85,8 +85,8 @@ class _RegistroPageState extends State<RegistroPage> {
             children: [
               // Cabecera amarilla
               Container(
-                height: 120,
-                color: const Color.fromARGB(159, 251, 193, 45),
+                height: 80,
+                color: const Color.fromARGB(255, 110, 55, 7),
                 child: Row(
                   children: [
                     IconButton(
@@ -108,7 +108,7 @@ class _RegistroPageState extends State<RegistroPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
               // Formulario
               Expanded(
                 child: SingleChildScrollView(
@@ -265,7 +265,6 @@ class _RegistroPageState extends State<RegistroPage> {
                           const SizedBox(height: 35),
                           // Botón Registrar
                           ElevatedButton(
-                            
                             onPressed: _registrarUsuario,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -287,7 +286,6 @@ class _RegistroPageState extends State<RegistroPage> {
                                 color: Colors.black,
                               ),
                             ),
-                            
                           ),
                         ],
                       ),

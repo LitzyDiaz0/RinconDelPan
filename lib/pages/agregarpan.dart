@@ -58,7 +58,7 @@ class AgregarPanPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(
                         255, 255, 255, 255), // Fondo blanco
-                    borderRadius: BorderRadius.circular(12), // Borde redondeado
+                    borderRadius: BorderRadius.circular(20), // Borde redondeado
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -90,12 +90,12 @@ class AgregarPanPage extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black, // Color del texto
                             backgroundColor: const Color.fromARGB(
-                                255, 255, 240, 202), // Fondo del botón
+                                255, 255, 255, 255), // Fondo del botón
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 50), // Relleno
                             side: const BorderSide(
                               color: Colors.black, // Color del borde
-                              width: 1, // Grosor del borde
+                              width: 2, // Grosor del borde
                             ),
                           ),
                           child: const Text(
@@ -117,7 +117,6 @@ class AgregarPanPage extends StatelessWidget {
     );
   }
 
-  // Método para crear un TextField con borde y sombra eliminados
   Widget _buildTextField(String label,
       {TextInputType keyboardType = TextInputType.text}) {
     return Container(
