@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './cortededia.dart';
 import './puntoventa.dart';
 
 class Ventas extends StatelessWidget {
@@ -7,9 +8,9 @@ class Ventas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 237, 199),
+      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 237, 199),
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
@@ -69,6 +70,12 @@ class Ventas extends StatelessWidget {
                   ),
                   onPressed: () {
                     // Acción para hacer corte
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CorteDelDiaPage(),
+                      ),
+                    );
                   },
                   child: Row(
                     children: const [
@@ -97,16 +104,28 @@ class Ventas extends StatelessWidget {
             ),
             SizedBox(height: 32),
             Center(
-              child: Text(
-                "Ventas del Día",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'Aleo',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    Icons.monetization_on,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "Ventas del Día",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'Aleo',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
             ),
+
             SizedBox(height: 16),
             // Tabla con los encabezados y datos
             SingleChildScrollView(
@@ -129,7 +148,8 @@ class Ventas extends StatelessWidget {
                         padding: EdgeInsets.all(8.0),
                         child: Text(
                           'Img',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
                         ),
                       ),
                     ),
@@ -138,16 +158,8 @@ class Ventas extends StatelessWidget {
                         padding: EdgeInsets.all(8.0),
                         child: Text(
                           'Nombre del Pan',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Container(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          'pza',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
                         ),
                       ),
                     ),
@@ -155,21 +167,32 @@ class Ventas extends StatelessWidget {
                       label: Container(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
+                          'pza',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Container(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
                           'Total',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
                         ),
                       ),
                     ),
                   ],
                   rows: [
                     DataRow(cells: [
-                      DataCell(Image.asset('assets/img/logo.png', width: 60)),
+                      DataCell(Image.asset('assets/img/logo.png', width: 50)),
                       DataCell(Text('Pan de Chocolate')),
                       DataCell(Text('10')),
                       DataCell(Text('\$100')),
                     ]),
                     DataRow(cells: [
-                      DataCell(Image.asset('assets/img/logo.png', width: 60)),
+                      DataCell(Image.asset('assets/img/logo.png', width: 50)),
                       DataCell(Text('Pan de Vainilla')),
                       DataCell(Text('15')),
                       DataCell(Text('\$150')),

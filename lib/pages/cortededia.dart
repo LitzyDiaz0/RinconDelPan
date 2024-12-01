@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './ventas_dia.dart';
 
 class CorteDelDiaPage extends StatelessWidget {
   const CorteDelDiaPage({super.key});
@@ -14,7 +15,12 @@ class CorteDelDiaPage extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           iconSize: 40,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Ventas(),
+              ),
+            );
           },
         ),
         automaticallyImplyLeading:
