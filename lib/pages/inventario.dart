@@ -29,8 +29,6 @@ class _InventarioPageState extends State<InventarioPage> {
     });
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,8 +203,43 @@ class _InventarioPageState extends State<InventarioPage> {
                                             Icons.delete,
                                             color: Colors.white,
                                           ),
-                                          onPressed: () {
-                                            // Implementa la lógica para eliminar el producto aquí
+                                          onPressed: () async {
+                                            // Mostrar un cuadro de diálogo de confirmación antes de eliminar
+                                            final confirm = await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      'Eliminar Producto'),
+                                                  content: const Text(
+                                                      '¿Estás seguro de que deseas eliminar este producto?'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              false), // No eliminar
+                                                      child: const Text(
+                                                          'Cancelar'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              true), // Confirmar eliminación
+                                                      child: const Text(
+                                                          'Eliminar'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+
+                                            if (confirm == true) {
+                                              // Lógica para eliminar el producto
+                                              await dbHelper.eliminarProducto(
+                                                  producto['id_producto']);
+                                              // Recargar la lista de productos
+                                              _cargarProductos();
+                                            }
                                           },
                                         ),
                                       ),

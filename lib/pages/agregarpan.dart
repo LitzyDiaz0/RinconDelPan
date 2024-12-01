@@ -106,33 +106,41 @@ class _AgregarPanPageState extends State<AgregarPanPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Logo arriba del texto
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: ClipOval(
-                child: SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: _selectedImage == null
-                      ? Image.asset(
-                          'assets/img/logo.png',
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          _selectedImage!,
-                          fit: BoxFit.cover,
-                        ),
-                ),
+            const Text(
+              'Agregar Pan',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Aleo',
+                color: Color.fromRGBO(96, 60, 30, 1),
               ),
             ),
+            const SizedBox(height: 16), // Espacio entre el texto y la imagen
+            ClipOval(
+              child: SizedBox(
+                width: 150,
+                height: 150,
+                child: _selectedImage == null
+                    ? Image.asset(
+                        'assets/img/logo.png',
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        _selectedImage!,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: _pickImage,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(
-                    255, 240, 240, 240), // Fondo gris claro
-                foregroundColor: Colors.black, // Color del texto e ícono
+                    255, 255, 229, 212), // Fondo gris claro
+                foregroundColor: const Color.fromARGB(
+                    255, 94, 47, 14), // Color del texto e ícono
                 side: const BorderSide(
-                  color: Colors.black, // Borde negro
+                  color: Color.fromARGB(255, 97, 37, 7), // Borde negro
                   width: 1.5,
                 ),
                 padding:
