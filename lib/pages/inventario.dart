@@ -181,7 +181,7 @@ class _InventarioPageState extends State<InventarioPage> {
                                                     sabor: producto['sabor'],
                                                     precio: producto['precio'],
                                                     stock: producto['stock'],
-                                                    imagen: '',
+                                                    imagen: producto['imagen'],
                                                   ),
                                                 ),
                                               ),
