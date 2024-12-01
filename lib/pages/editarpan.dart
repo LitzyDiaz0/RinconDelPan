@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rincondelpan/models/producto.dart';
+import 'inventario.dart';
 import '../database/db_helper.dart';
 import 'package:logger/logger.dart';
 
@@ -89,7 +90,14 @@ class _EditarPanPageState extends State<EditarPanPage> {
 
     // Volver a la página anterior
     // ignore: use_build_context_synchronously
-    Navigator.pop(context, true);
+    Navigator.pushReplacement(
+      // ignore: use_build_context_synchronously
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const InventarioPage(), // Asegúrate de que LoginPage esté importado
+      ),
+    );
   }
 
   @override
