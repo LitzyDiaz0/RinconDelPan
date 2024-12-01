@@ -4,7 +4,7 @@ import 'package:rincondelpan/pages/inventario.dart';
 // Asegúrate de importar el helper de la base de datos
 
 class EditarPanPage extends StatelessWidget {
-  final Producto producto; // 
+  final Producto producto; //
 
   const EditarPanPage({super.key, required this.producto});
 
@@ -106,7 +106,8 @@ class EditarPanPage extends StatelessWidget {
                 Text("Precio"),
                 SizedBox(height: 8),
                 TextField(
-                  controller: TextEditingController(text: producto.precio.toString()),
+                  controller:
+                      TextEditingController(text: producto.precio.toString()),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Ingrese el precio del pan",
@@ -117,7 +118,8 @@ class EditarPanPage extends StatelessWidget {
                 Text("Stock"),
                 SizedBox(height: 8),
                 TextField(
-                  controller: TextEditingController(text: producto.stock.toString()),
+                  controller:
+                      TextEditingController(text: producto.stock.toString()),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Ingrese el stock del pan",
