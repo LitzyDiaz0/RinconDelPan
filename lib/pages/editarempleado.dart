@@ -237,6 +237,11 @@ class _EditarEmpleadoPageState extends State<EditarEmpleadoPage> {
                   // Actualiza el usuario en la base de datos
                   final dbHelper = DatabaseHelper();
                   await dbHelper.actualizarUsuario(updatedUsuario);
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Usuario actualizado exitosamente"),
+                    backgroundColor: Colors.green,
+                  ));
 
                   // Navega a la página de administración de usuarios
                   Navigator.pushReplacement(

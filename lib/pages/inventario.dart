@@ -29,6 +29,8 @@ class _InventarioPageState extends State<InventarioPage> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,7 +178,8 @@ class _InventarioPageState extends State<InventarioPage> {
                                                 builder: (context) =>
                                                     EditarPanPage(
                                                   producto: Producto(
-                                                    id: producto['id_producto'],
+                                                    idProducto:
+                                                        producto['id_producto'],
                                                     nombre: producto['nombre'],
                                                     sabor: producto['sabor'],
                                                     precio: producto['precio'],

@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/usuario.dart';
@@ -111,6 +112,7 @@ class DatabaseHelper {
       whereArgs: [usuario.idUsuario ?? -1],
     );
   }
+  
 
   // Eliminar un usuario
   Future<int> eliminarUsuario(int id) async {
@@ -172,12 +174,16 @@ class DatabaseHelper {
   // Actualizar un producto
   Future<int> actualizarProducto(Producto producto) async {
     final db = await database;
-    return await db.update(
+    int result = await db.update(
       'producto',
       producto.toMap(),
       where: 'id_producto = ?',
       whereArgs: [producto.idProducto],
     );
+    // Log para verificar la actualización
+    var logger = Logger();
+    logger.i("Producto actualizado con éxito: ${producto.toMap()}");
+    return result;
   }
 
   // Eliminar un producto
