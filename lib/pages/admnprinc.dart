@@ -3,7 +3,7 @@ import './login.dart';
 import './puntoventa.dart';
 import './adminusers.dart';
 import './inventario.dart';
-import './cortededia.dart';
+import './ventas_dia.dart';
 
 class AdminPage extends StatelessWidget {
   final String rol; // Aceptar el rol
@@ -183,10 +183,11 @@ class AdminPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           // Lógica para Ver Ventas del Día
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const CorteDelDiaPage()),
+                              builder: (context) => const Ventas(),
+                            ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -232,7 +233,7 @@ class AdminPage extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const AdministrarUsuariosPage(), // Asegúrate de que LoginPage esté importado
+                                  const AdministrarUsuariosPage(),
                             ),
                           );
                         },
@@ -278,8 +279,7 @@ class AdminPage extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const LoginPage(), // Asegúrate de que LoginPage esté importado
+                              builder: (context) => const LoginPage(),
                             ),
                           );
                         },

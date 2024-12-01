@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './admnprinc.dart';
-import './login.dart'; // Asegúrate de importar tu página de login
+import './login.dart';
+import './ventas_dia.dart';
 
 class PuntoDeVentaPage extends StatelessWidget {
   final String rol; // Agregamos el rol del usuario
@@ -47,7 +48,9 @@ class PuntoDeVentaPage extends StatelessWidget {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const AdminPage(rol: '',),
+                                builder: (context) => const AdminPage(
+                                  rol: '',
+                                ),
                               ),
                             );
                           }
@@ -127,6 +130,12 @@ class PuntoDeVentaPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {
                         // Lógica para ver ventas del día
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Ventas(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

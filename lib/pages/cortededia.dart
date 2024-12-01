@@ -12,6 +12,7 @@ class CorteDelDiaPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
+          iconSize: 40,
           onPressed: () {
             Navigator.pop(context);
           },
