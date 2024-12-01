@@ -1,98 +1,131 @@
 import 'package:flutter/material.dart';
 
 class CorteDelDiaPage extends StatelessWidget {
-  final String cantidadPanesVendidos =
-      "100"; // Ejemplo de cantidad de panes vendidos
-  final String dineroObtenido = "\$500.00";
-  const CorteDelDiaPage({super.key}); // Ejemplo de dinero obtenido
+  const CorteDelDiaPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100), // Ajusta la altura de la AppBar
-        child: AppBar(
-          backgroundColor: Colors.orange,
-          elevation: 0, // Sin sombra
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context); // Volver a la pantalla anterior
-                    },
-                  ),
-                  Spacer(),
-                  Image.asset(
-                    'assets/img/logo.png', // Reemplaza con la ruta de tu logo
-                    width: 100,
-                    height: 50,
-                  ),
-                ],
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 107, 59, 4),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
+        automaticallyImplyLeading:
+            false, // Evita que el título de la appBar se coloque
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Fecha y cantidad de panes vendidos
+            // Imagen debajo de la barra naranja
+            Center(
+              child: Image.asset(
+                'assets/img/logo.png', // Asegúrate de que esta ruta sea correcta
+                width: 170,
+                height: 170,
+              ),
+            ),
+            SizedBox(height: 26),
+
+            // Título Corte del Día
+            Center(
+              child: Text(
+                "Corte del día",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: 'Aleo',
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 118, 74, 8),
+                ),
+              ),
+            ),
+            SizedBox(height: 32),
+
+            // Fila con solo la Fecha
+            Padding(
+              padding: const EdgeInsets.only(bottom: 36.0),
+              child: Text(
+                "Fecha: ${DateTime.now().toLocal().toString().split(' ')[0]}",
+                style: TextStyle(fontSize: 18, fontFamily: 'Aleo'),
+              ),
+            ),
+
+            // Fila con Cantidad de Panes Vendidos y su valor
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Fecha: ${DateTime.now().toLocal().toString().split(' ')[0]}",
-                  style: TextStyle(fontSize: 16),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 15),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    color: const Color.fromARGB(
+                        255, 255, 255, 255), // Fondo blanco
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "Numero de panes vendidos: ",
+                    style: TextStyle(fontSize: 18, fontFamily: 'Aleo'),
+                  ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      "Cantidad de panes vendidos: ",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: Text(
-                        cantidadPanesVendidos,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "3", // Valor de cantidad de panes vendidos
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Aleo',
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            SizedBox(
+                height:
+                    36), // Espacio entre "Cantidad de panes vendidos" y "Dinero obtenido"
 
-            // Dinero obtenido
+            // Fila con Dinero Obtenido y su valor
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Dinero obtenido: ",
-                  style: TextStyle(fontSize: 16),
-                ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
-                    color: Colors.green, // Fondo verde
+                    color: const Color.fromARGB(
+                        255, 255, 255, 255), // Fondo blanco
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    dineroObtenido,
+                    "Dinero obtenido: ",
+                    style: TextStyle(fontSize: 18, fontFamily: 'Aleo'),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    color:
+                        const Color.fromARGB(255, 198, 255, 200), // Fondo verde
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "\$600.00", // Valor de dinero obtenido
                     style: TextStyle(
-                      fontSize: 16,
-                      color: Colors
-                          .white, // Color del texto blanco para contrastar con el verde
+                      fontSize: 18, fontFamily: 'Aleo',
+                      color: const Color.fromARGB(
+                          255, 0, 0, 0), // Texto blanco para contraste
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

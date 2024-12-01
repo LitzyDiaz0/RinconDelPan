@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rincondelpan/models/producto.dart';
 import 'inventario.dart';
 import '../database/db_helper.dart';
-import 'package:logger/logger.dart';
 
 class EditarPanPage extends StatefulWidget {
   final Producto producto;
@@ -23,7 +22,7 @@ class _EditarPanPageState extends State<EditarPanPage> {
   final _stockController = TextEditingController();
   File? _imageFile;
 
-  final Logger _logger = Logger(); // Instancia del logger
+// Instancia del logger
 
   @override
   void initState() {
@@ -36,67 +35,46 @@ class _EditarPanPageState extends State<EditarPanPage> {
     _imageFile = File(_producto.imagen); // Aquí debe ir la imagen correcta
   }
 
-  // Función para seleccionar una nueva imagen
   Future<void> _selectImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      _producto.imagen = _imageFile!.path;
       setState(() {
         _imageFile = File(pickedFile.path);
       });
     }
   }
 
-  // Función para guardar los cambios en el producto
   Future<void> _guardarProducto() async {
-    // Validar que los campos no estén vacíos
     if (_nombreController.text.isEmpty ||
         _saborController.text.isEmpty ||
         _precioController.text.isEmpty ||
         _stockController.text.isEmpty ||
         _imageFile == null) {
-      // Mostrar un mensaje de error si hay campos vacíos
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Todos los campos son obligatorios"),
         backgroundColor: Colors.red,
       ));
       return;
     }
 
-    // Log: Ver los valores antes de la actualización
-    _logger.i("Producto actualizado: ${_producto.toMap()}");
-
-    // Crear el objeto Producto con los valores modificados
     _producto.nombre = _nombreController.text;
     _producto.sabor = _saborController.text;
     _producto.precio = double.parse(_precioController.text);
     _producto.stock = int.parse(_stockController.text);
-    _producto.imagen = _imageFile!.path; // Actualizar la ruta de la imagen
+    _producto.imagen = _imageFile!.path;
 
-    // Log: Ver el objeto Producto antes de la actualización
-    _logger.i("Producto actualizado: ${_producto.toMap()}");
-
-    // Llamar al método para actualizar el producto en la base de datos
     final dbHelper = DatabaseHelper();
     await dbHelper.actualizarProducto(_producto);
 
-    // Mostrar un mensaje de éxito
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text("Producto actualizado exitosamente"),
       backgroundColor: Colors.green,
     ));
 
-    // Volver a la página anterior
-    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
-      // ignore: use_build_context_synchronously
       context,
-      MaterialPageRoute(
-        builder: (context) =>
-            const InventarioPage(), // Asegúrate de que LoginPage esté importado
-      ),
+      MaterialPageRoute(builder: (context) => const InventarioPage()),
     );
   }
 
@@ -104,116 +82,141 @@ class _EditarPanPageState extends State<EditarPanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text(
-          "Editar Pan",
-          style: TextStyle(
-            fontSize: 24,
-            fontFamily: 'Aleo',
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+      appBar: PreferredSize(
+        preferredSize:
+            const Size.fromHeight(100), // Altura personalizada del AppBar
+        child: AppBar(
+          backgroundColor:
+              const Color.fromARGB(255, 255, 226, 163), // Color amarillo
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .center, // Centrar el contenido horizontalmente
+            children: const [
+              Text(
+                "Editar Pan",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: 'Aleo',
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 111, 63, 8),
+                ),
+              ),
+              SizedBox(width: 16), // Espaciado entre texto y la imagen
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/img/logo.png'),
+                radius: 30, // Tamaño del logo
+              ),
+            ],
           ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context); // Volver a la página anterior
-          },
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back,
+                color: Color.fromARGB(255, 92, 65, 7)),
+            iconSize: 40,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            // Contenedor para imagen seleccionable
             Center(
               child: GestureDetector(
-                onTap:
-                    _selectImage, // Llamar a la función para seleccionar imagen
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _imageFile != null
-                      ? Image.file(
-                          _imageFile!,
-                          fit: BoxFit.cover,
+                onTap: _selectImage,
+                child: CircleAvatar(
+                  radius: 75,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage:
+                      _imageFile != null ? FileImage(_imageFile!) : null,
+                  child: _imageFile == null
+                      ? const Text(
+                          "Imagen del pan",
+                          style: TextStyle(color: Colors.grey),
                         )
-                      : const Center(
-                          child: Text(
-                            "Imagen del pan",
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
-                          ),
-                        ),
+                      : null,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            // Campos de entrada con padding horizontal
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Nombre"),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _nombreController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Ingrese el nombre del pan",
+            const SizedBox(height: 40),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 100, child: Text("Nombre:")),
+                    Expanded(
+                      child: TextField(
+                        controller: _nombreController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "Nombre",
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text("Sabor"),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _saborController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Ingrese el sabor del pan",
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const SizedBox(width: 100, child: Text("Sabor:")),
+                    Expanded(
+                      child: TextField(
+                        controller: _saborController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "Sabor",
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text("Precio"),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _precioController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Ingrese el precio del pan",
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const SizedBox(width: 100, child: Text("Precio:")),
+                    Expanded(
+                      child: TextField(
+                        controller: _precioController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "Precio",
+                        ),
+                      ),
                     ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text("Stock"),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _stockController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Ingrese el stock del pan",
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const SizedBox(width: 100, child: Text("Stock:")),
+                    Expanded(
+                      child: TextField(
+                        controller: _stockController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "Stock",
+                        ),
+                      ),
                     ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            // Botón "Guardar"
+            const SizedBox(height: 50),
             Center(
               child: ElevatedButton(
                 onPressed: _guardarProducto,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   side: const BorderSide(color: Colors.black, width: 2),
                   padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 90),
                 ),
                 child: const Text(
                   "Guardar",
@@ -225,7 +228,6 @@ class _EditarPanPageState extends State<EditarPanPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
