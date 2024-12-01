@@ -58,6 +58,7 @@ class _AgregarPanPageState extends State<AgregarPanPage> {
       precio: precio,
       stock: stock,
       imagen: _selectedImage!.path,
+      id: null,
     );
 
     // Insertar en la base de datos

@@ -12,7 +12,7 @@ class Producto {
     required this.sabor,
     required this.precio,
     required this.stock,
-    required this.imagen,
+    required this.imagen, required id,
   });
 
   // Convertir el Producto a un Map para almacenarlo en la base de datos
@@ -35,7 +35,7 @@ class Producto {
       sabor: map['sabor'],
       precio: map['precio'],
       stock: map['stock'],
-      imagen: map['imagen'],
+      imagen: map['imagen'], id: null,
     );
   }
 }

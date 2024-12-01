@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rincondelpan/models/producto.dart';
+import 'package:rincondelpan/pages/inventario.dart';
+// Asegúrate de importar el helper de la base de datos
 
 class EditarPanPage extends StatelessWidget {
-  const EditarPanPage({super.key});
+  final Producto producto; // 
+
+  const EditarPanPage({super.key, required this.producto});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +20,18 @@ class EditarPanPage extends StatelessWidget {
             height: 80,
             color: Colors.orange,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
-                    Navigator.pop(context); // Navegar hacia atrás
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const InventarioPage(), // Regresar a InventarioPage
+                      ),
+                    ); // Navegar hacia atrás
                   },
                 ),
                 const SizedBox(width: 8),
@@ -27,16 +39,16 @@ class EditarPanPage extends StatelessWidget {
                   "Editar Pan",
                   style: TextStyle(
                     fontSize: 24,
+                    fontFamily: 'Aleo',
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Image.asset(
-                  'assets/panico.png',
+                  'assets/img/panico.png',
+                  width: 100,
                   height: 50,
-                  width: 50,
-                  fit: BoxFit.contain,
                 ),
               ],
             ),
@@ -65,24 +77,26 @@ class EditarPanPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          // Campos de entrada
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+          // Campos de entrada con padding horizontal
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Nombre"),
-                SizedBox(height: 8),
+                const Text("Nombre"),
+                const SizedBox(height: 8),
                 TextField(
-                  decoration: InputDecoration(
+                  controller: TextEditingController(text: producto.nombre),
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Ingrese el nombre del pan",
                   ),
                 ),
-                SizedBox(height: 16),
-                Text("Sabor"),
-                SizedBox(height: 8),
+                const SizedBox(height: 16),
+                const Text("Sabor"),
+                const SizedBox(height: 8),
                 TextField(
+                  controller: TextEditingController(text: producto.sabor),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Ingrese el sabor del pan",
@@ -92,6 +106,7 @@ class EditarPanPage extends StatelessWidget {
                 Text("Precio"),
                 SizedBox(height: 8),
                 TextField(
+                  controller: TextEditingController(text: producto.precio.toString()),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Ingrese el precio del pan",
@@ -102,6 +117,7 @@ class EditarPanPage extends StatelessWidget {
                 Text("Stock"),
                 SizedBox(height: 8),
                 TextField(
+                  controller: TextEditingController(text: producto.stock.toString()),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Ingrese el stock del pan",
