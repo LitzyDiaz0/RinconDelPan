@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './detallespan.dart';
+import './puntoventa.dart';
 
 class BusquedaPage extends StatefulWidget {
   const BusquedaPage({super.key});
@@ -23,7 +25,14 @@ class _BusquedaPageState extends State<BusquedaPage> {
               color: Color.fromARGB(255, 114, 43, 8)),
           iconSize: 40,
           onPressed: () {
-            Navigator.pop(context); // Volver a la pantalla anterior
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PuntoDeVentaPage(
+                  rol: '',
+                ),
+              ),
+            );
           },
         ),
       ),
@@ -63,7 +72,12 @@ class _BusquedaPageState extends State<BusquedaPage> {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search, color: Colors.brown),
                   onPressed: () {
-                    // Acción al presionar la lupa
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DetallesDelPanPage(),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -88,7 +102,7 @@ class _BusquedaPageState extends State<BusquedaPage> {
           // Lista de resultados simulados
           Expanded(
             child: ListView.builder(
-              itemCount: 3, // Cambia este valor según tus resultados
+              itemCount: 1, // Cambia este valor según tus resultados
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
