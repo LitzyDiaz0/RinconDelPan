@@ -1,4 +1,5 @@
 import 'package:logger/logger.dart';
+import '../models/ventas.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/usuario.dart';
@@ -50,6 +51,18 @@ class DatabaseHelper {
             stock INTEGER
           )
         ''');
+
+        //Tabla de ventas
+        await db.execute('''
+    CREATE TABLE ventas (
+      id_venta INTEGER PRIMARY KEY AUTOINCREMENT,
+      id_producto INTEGER NOT NULL,
+      precio REAL NOT NULL,
+      cantidad INTEGER NOT NULL,
+      total REAL NOT NULL,
+      FOREIGN KEY (id_producto) REFERENCES productos (id_producto)
+    )
+  ''');
 
         // Insertar usuario administrador por defecto
         await db.insert('usuario', {
@@ -112,7 +125,6 @@ class DatabaseHelper {
       whereArgs: [usuario.idUsuario ?? -1],
     );
   }
-  
 
   // Eliminar un usuario
   Future<int> eliminarUsuario(int id) async {
@@ -171,6 +183,21 @@ class DatabaseHelper {
     return null;
   }
 
+  // Buscar productos por nombre o precio
+  Future<List<Producto>> buscarProductos(String query) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'producto',
+      where: 'nombre LIKE ? OR precio = ?',
+      whereArgs: ['%$query%', double.tryParse(query)],
+    );
+
+    return List.generate(maps.length, (i) {
+      return Producto.fromMap(maps[i]);
+    });
+  }
+
   // Actualizar un producto
   Future<int> actualizarProducto(Producto producto) async {
     final db = await database;
@@ -194,5 +221,35 @@ class DatabaseHelper {
       where: 'id_producto = ?',
       whereArgs: [id],
     );
+  }
+
+  //-----Metodos de ventas
+  //Insertar venta
+  Future<int> insertarVenta(Database db, Venta venta) async {
+    return await db.insert('ventas', venta.toMap());
+  }
+
+  //obtener ventas
+  Future<List<Venta>> obtenerVentas(Database db) async {
+    final List<Map<String, dynamic>> maps = await db.query('ventas');
+
+    return List.generate(maps.length, (i) {
+      return Venta.fromMap(maps[i]);
+    });
+  }
+
+//Consultar ventas con datos de productos
+  Future<List<Map<String, dynamic>>> obtenerVentasConProductos(
+      Database db) async {
+    return await db.rawQuery('''
+    SELECT 
+      ventas.id_venta,
+      productos.nombre AS nombre_producto,
+      ventas.precio,
+      ventas.cantidad,
+      ventas.total
+    FROM ventas
+    INNER JOIN productos ON ventas.id_producto = productos.id_producto
+  ''');
   }
 }

@@ -93,7 +93,7 @@ class DetallesDelPanPage extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Cantidad: XX ",
+                          "Sabor: XX ",
                           style: TextStyle(fontSize: 16),
                         ),
                         SizedBox(height: 10),
