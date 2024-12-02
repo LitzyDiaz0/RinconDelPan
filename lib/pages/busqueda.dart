@@ -119,8 +119,13 @@ class _BusquedaPageState extends State<BusquedaPage> {
             child: productos.isEmpty
                 ? const Center(
                     child: Text(
-                      'No se encontraron productos',
-                      style: TextStyle(fontSize: 18),
+                      'Presiona la lupa para buscar',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: "Aleo",
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 152, 48, 0),
+                      ),
                     ),
                   )
                 : ListView.builder(
@@ -128,19 +133,20 @@ class _BusquedaPageState extends State<BusquedaPage> {
                     itemBuilder: (context, index) {
                       final producto = productos[index];
                       return GestureDetector(
-                       onTap: () {
-  setState(() {
-    selectedIndex = index; // Cambia el índice seleccionado
-  });
-  // Al seleccionar un producto, navega a la página de detalles, pasando el producto
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => DetallesDelPanPage(producto: productos[index]),
-    ),
-  );
-},
-
+                        onTap: () {
+                          setState(() {
+                            selectedIndex =
+                                index; // Cambia el índice seleccionado
+                          });
+                          // Al seleccionar un producto, navega a la página de detalles, pasando el producto
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetallesDelPanPage(
+                                  producto: productos[index]),
+                            ),
+                          );
+                        },
                         child: Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),
@@ -175,7 +181,7 @@ class _BusquedaPageState extends State<BusquedaPage> {
                               ),
                             ),
                             subtitle: Text(
-                              '${producto.sabor}  -Precio:\$${producto.precio}',
+                              '${producto.sabor}   \$${producto.precio}',
                               style: const TextStyle(
                                 fontFamily: 'Aleo',
                                 fontSize: 16,
