@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/producto.dart'; // Importa el archivo donde tienes tu clase Producto y método buscarProductos
+import 'package:logger/logger.dart'; // Importar el paquete de logger
+import '../models/producto.dart';
 import 'puntoventa.dart';
 import '../database/db_helper.dart';
+import 'dart:io';
 
 class BusquedaPage extends StatefulWidget {
   const BusquedaPage({super.key});
@@ -15,19 +17,26 @@ class _BusquedaPageState extends State<BusquedaPage> {
   String searchQuery = ""; // Texto de búsqueda
   List<Producto> productos = []; // Lista de productos encontrados
 
+  // Instancia del logger
+  final Logger logger = Logger();
+
   // Método para buscar productos
   Future<void> buscarProductos(String query) async {
-    // Reemplaza 'tu_instancia_de_base_de_datos' por la instancia de tu servicio o base de datos
     final resultados = await dbHelper.buscarProductos(query);
+
     setState(() {
       productos = resultados;
     });
+
+    // Log para verificar los resultados
+    logger.i(
+        "Se encontraron ${resultados.length} productos para la búsqueda '$query'");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Fondo blanco
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 237, 207, 159),
         elevation: 1,
@@ -50,7 +59,6 @@ class _BusquedaPageState extends State<BusquedaPage> {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          // Título "Buscar Pan"
           const Center(
             child: Text(
               "Buscar Pan",
@@ -63,12 +71,13 @@ class _BusquedaPageState extends State<BusquedaPage> {
             ),
           ),
           const SizedBox(height: 40),
-          // Input de búsqueda
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               onChanged: (value) {
-                searchQuery = value;
+                setState(() {
+                  searchQuery = value;
+                });
               },
               decoration: InputDecoration(
                 hintText: "Buscar nombre del pan o precio",
@@ -88,7 +97,6 @@ class _BusquedaPageState extends State<BusquedaPage> {
             ),
           ),
           const SizedBox(height: 45),
-          // Título de resultados
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Align(
@@ -96,85 +104,67 @@ class _BusquedaPageState extends State<BusquedaPage> {
               child: Text(
                 "Resultados encontrados:",
                 style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Aleo',
-                    color: Color.fromARGB(255, 115, 41, 7)),
+                  fontSize: 16,
+                  fontFamily: 'Aleo',
+                  color: Colors.brown,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          // Lista de resultados
+          const SizedBox(height: 20),
           Expanded(
-            child: productos.isNotEmpty
-                ? ListView.builder(
+            child: productos.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No se encontraron productos',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
+                : ListView.builder(
                     itemCount: productos.length,
                     itemBuilder: (context, index) {
                       final producto = productos[index];
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            // Puedes implementar alguna acción al seleccionar un producto
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 10,
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(
+                            color: Colors.black,
+                            width: 1,
                           ),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
+                        ),
+                        child: ListTile(
+                          leading: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
+                            child: Image.file(
+                              File(producto.imagen),
+                              width: 70, // Imagen más grande
+                              height: 70, // Imagen más grande
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              // Imagen del producto
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  image: DecorationImage(
-                                    image: NetworkImage(producto.imagen),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              // Nombre y precio del producto
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      producto.nombre,
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Amethysta'),
-                                    ),
-                                    Text(
-                                      "\$${producto.precio.toStringAsFixed(2)}",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          title: Text(
+                            producto.nombre,
+                            style: const TextStyle(
+                              fontFamily: 'Aleo', // Tipo de fuente Aleo
+                              fontWeight: FontWeight.bold, // Negritas
+                              fontSize:
+                                  18, // Ajusta el tamaño del texto si es necesario
+                            ),
                           ),
+                          subtitle: Text(
+                            'Precio: \$${producto.precio}',
+                            style: const TextStyle(
+                              fontFamily: 'Aleo',
+                              fontSize: 16,
+                            ),
+                          ),
+                          isThreeLine: true,
                         ),
                       );
                     },
-                  )
-                : const Center(
-                    child: Text(
-                      "No se encontraron resultados",
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
                   ),
           ),
         ],
