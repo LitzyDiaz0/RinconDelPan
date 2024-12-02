@@ -240,17 +240,8 @@ class PuntoDeVentaPage extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(
-                                  '\$',
+                                  'Sabor',
                                   style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Pzas',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Aleo'),
                                 ),
                               ),
                               Padding(
@@ -283,10 +274,6 @@ class PuntoDeVentaPage extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text('\$10'),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text('3'),
                               ),
                               Container(
                                 padding: const EdgeInsets.all(8.0),
