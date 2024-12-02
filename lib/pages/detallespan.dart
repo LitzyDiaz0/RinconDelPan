@@ -35,6 +35,17 @@ class DetallesDelPanPage extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
+          // Texto "Detalles del pan"
+          const Text(
+            'Detalles del pan',
+            style: TextStyle(
+              fontSize: 28,
+              fontFamily: 'Aleo',
+              fontWeight: FontWeight.bold,
+              color: Colors.brown,
+            ),
+          ),
+          const SizedBox(height: 10),
           // Imagen centrada
           const Center(
             child: Image(
