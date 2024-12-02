@@ -16,6 +16,7 @@ class _BusquedaPageState extends State<BusquedaPage> {
   final dbHelper = DatabaseHelper();
   String searchQuery = ""; // Texto de búsqueda
   List<Producto> productos = []; // Lista de productos encontrados
+  int? selectedIndex; // Índice del producto seleccionado
 
   // Instancia del logger
   final Logger logger = Logger();
@@ -88,7 +89,8 @@ class _BusquedaPageState extends State<BusquedaPage> {
                 filled: true,
                 fillColor: Colors.white,
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.search, color: Colors.brown),
+                  icon: const Icon(Icons.search,
+                      color: Color.fromARGB(255, 81, 49, 37)),
                   onPressed: () {
                     buscarProductos(searchQuery);
                   },
@@ -124,44 +126,55 @@ class _BusquedaPageState extends State<BusquedaPage> {
                     itemCount: productos.length,
                     itemBuilder: (context, index) {
                       final producto = productos[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: const BorderSide(
-                            color: Colors.black,
-                            width: 1,
-                          ),
-                        ),
-                        child: ListTile(
-                          leading: ClipRRect(
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedIndex =
+                                index; // Cambia el índice seleccionado
+                          });
+                        },
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.file(
-                              File(producto.imagen),
-                              width: 70, // Imagen más grande
-                              height: 70, // Imagen más grande
-                              fit: BoxFit.cover,
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 1,
                             ),
                           ),
-                          title: Text(
-                            producto.nombre,
-                            style: const TextStyle(
-                              fontFamily: 'Aleo', // Tipo de fuente Aleo
-                              fontWeight: FontWeight.bold, // Negritas
-                              fontSize:
-                                  18, // Ajusta el tamaño del texto si es necesario
+                          color: selectedIndex == index
+                              ? const Color.fromARGB(255, 255, 235, 203)
+                              : null, // Color amarillo si está seleccionado
+                          child: ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(
+                                File(producto.imagen),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            'Precio: \$${producto.precio}',
-                            style: const TextStyle(
-                              fontFamily: 'Aleo',
-                              fontSize: 16,
+                            title: Text(
+                              producto.nombre,
+                              style: const TextStyle(
+                                fontFamily: 'Aleo',
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 88, 35, 10),
+                                fontSize: 18,
+                              ),
                             ),
+                            subtitle: Text(
+                              '${producto.sabor}  -Precio:\$${producto.precio}',
+                              style: const TextStyle(
+                                fontFamily: 'Aleo',
+                                fontSize: 16,
+                              ),
+                            ),
+                            isThreeLine: true,
                           ),
-                          isThreeLine: true,
                         ),
                       );
                     },
