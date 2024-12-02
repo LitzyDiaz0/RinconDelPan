@@ -3,6 +3,7 @@ import 'package:logger/logger.dart'; // Importar el paquete de logger
 import '../models/producto.dart';
 import 'puntoventa.dart';
 import '../database/db_helper.dart';
+import './detallespan.dart';
 import 'dart:io';
 
 class BusquedaPage extends StatefulWidget {
@@ -127,12 +128,19 @@ class _BusquedaPageState extends State<BusquedaPage> {
                     itemBuilder: (context, index) {
                       final producto = productos[index];
                       return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedIndex =
-                                index; // Cambia el índice seleccionado
-                          });
-                        },
+                       onTap: () {
+  setState(() {
+    selectedIndex = index; // Cambia el índice seleccionado
+  });
+  // Al seleccionar un producto, navega a la página de detalles, pasando el producto
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DetallesDelPanPage(producto: productos[index]),
+    ),
+  );
+},
+
                         child: Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),

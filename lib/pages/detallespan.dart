@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:rincondelpan/pages/busqueda.dart';
+import 'package:rincondelpan/models/producto.dart';
+import './busqueda.dart';
 
 class DetallesDelPanPage extends StatelessWidget {
-  const DetallesDelPanPage({super.key});
+  final Producto producto; // Añadir esta propiedad
+
+  const DetallesDelPanPage(
+      {super.key,
+      required this.producto}); // Asegúrate de pasar el producto al constructor
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Fondo blanco
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 234, 176),
         elevation: 1,
@@ -16,7 +23,6 @@ class DetallesDelPanPage extends StatelessWidget {
               color: Color.fromARGB(255, 78, 30, 5)),
           iconSize: 40,
           onPressed: () {
-            // Volver a la pantalla anterior
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -40,10 +46,10 @@ class DetallesDelPanPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // Título Nombre del Pan
-          const Center(
+          Center(
             child: Text(
-              "Nombre del Pan",
-              style: TextStyle(
+              producto.nombre, // Muestra el nombre del producto aquí
+              style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.brown,
@@ -68,15 +74,18 @@ class DetallesDelPanPage extends StatelessWidget {
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
+                      child: SizedBox(
                         width: 110,
                         height: 110,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey[300],
-                        ),
-                        child: const Icon(Icons.image), // Placeholder de imagen
+                        child: producto.imagen.isNotEmpty
+                            ? Image.file(
+                                File(producto.imagen),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : const Icon(Icons
+                                .image), // Mostrar la imagen o un placeholder
                       ),
                     ),
                   ),
@@ -86,20 +95,23 @@ class DetallesDelPanPage extends StatelessWidget {
                     flex: 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          "Precio: \$XX.XX",
-                          style: TextStyle(fontSize: 16),
+                          "Precio: \$${producto.precio}",
+                          style:
+                              const TextStyle(fontSize: 18, fontFamily: 'Aleo'),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
-                          "Sabor: XX ",
-                          style: TextStyle(fontSize: 16),
+                          "Sabor: ${producto.sabor}",
+                          style:
+                              const TextStyle(fontSize: 18, fontFamily: 'Aleo'),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
-                          "Stock: XX ",
-                          style: TextStyle(fontSize: 16),
+                          "Stock: ${producto.stock}",
+                          style:
+                              const TextStyle(fontSize: 18, fontFamily: 'Aleo'),
                         ),
                       ],
                     ),
