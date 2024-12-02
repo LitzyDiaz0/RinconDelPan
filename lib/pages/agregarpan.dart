@@ -78,7 +78,10 @@ class _AgregarPanPageState extends State<AgregarPanPage> {
     Navigator.pushReplacement(
       // ignore: use_build_context_synchronously
       context,
-      MaterialPageRoute(builder: (context) => const InventarioPage()),
+      MaterialPageRoute(
+          builder: (context) => const InventarioPage(
+                rol: '',
+              )),
     );
   }
 
@@ -96,7 +99,9 @@ class _AgregarPanPageState extends State<AgregarPanPage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const InventarioPage(),
+                builder: (context) => const InventarioPage(
+                  rol: '',
+                ),
               ),
             );
           },

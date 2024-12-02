@@ -139,8 +139,9 @@ class AdminPage extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const InventarioPage(), // Asegúrate de que LoginPage esté importado
+                              builder: (context) => const InventarioPage(
+                                rol: '',
+                              ), // Asegúrate de que LoginPage esté importado
                             ),
                           );
                         },

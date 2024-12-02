@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './admnprinc.dart';
 import './login.dart';
 import './ventas_dia.dart';
+import './busqueda.dart';
+import './inventario.dart';
 
 class PuntoDeVentaPage extends StatelessWidget {
   final String rol; // Agregamos el rol del usuario
@@ -101,6 +103,12 @@ class PuntoDeVentaPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {
                         // Lógica para buscar pan
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BusquedaPage(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -164,7 +172,35 @@ class PuntoDeVentaPage extends StatelessWidget {
                     // Botón Inventario
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Lógica para inventario
+                        if (rol == 'empleado') {
+                          // Si es empleado, muestra un mensaje de error
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'No tienes permisos suficientes para administrar el inventario.',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255)),
+                              ),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 255, 150, 90),
+                              duration: Duration(
+                                  seconds:
+                                      3), // Tiempo que el mensaje estará visible
+                            ),
+                          );
+                        } else {
+                          // Si no es empleado, redirige a la página de administrador
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const InventarioPage(
+                                rol: '',
+                              ),
+                            ),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

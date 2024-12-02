@@ -6,7 +6,7 @@ import './agregarpan.dart';
 import '../models/producto.dart';
 
 class InventarioPage extends StatefulWidget {
-  const InventarioPage({super.key});
+  const InventarioPage({super.key, required String rol});
 
   @override
   State<InventarioPage> createState() => _InventarioPageState();

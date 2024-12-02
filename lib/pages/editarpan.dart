@@ -74,7 +74,10 @@ class _EditarPanPageState extends State<EditarPanPage> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const InventarioPage()),
+      MaterialPageRoute(
+          builder: (context) => const InventarioPage(
+                rol: '',
+              )),
     );
   }
 
