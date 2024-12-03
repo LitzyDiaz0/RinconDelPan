@@ -1,14 +1,12 @@
 class Venta {
   int? idVenta; // Llave primaria
   int idProducto; // Llave foránea de la tabla productos
-  double precio;
   int cantidad;
   double total;
 
   Venta({
     this.idVenta,
     required this.idProducto,
-    required this.precio,
     required this.cantidad,
     required this.total,
   });
@@ -18,7 +16,6 @@ class Venta {
     return {
       'id_venta': idVenta,
       'id_producto': idProducto,
-      'precio': precio,
       'cantidad': cantidad,
       'total': total,
     };
@@ -29,7 +26,6 @@ class Venta {
     return Venta(
       idVenta: map['id_venta'],
       idProducto: map['id_producto'],
-      precio: map['precio'],
       cantidad: map['cantidad'],
       total: map['total'],
     );
