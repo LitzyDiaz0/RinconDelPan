@@ -247,10 +247,11 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                       ),
                       child: Table(
                         columnWidths: const {
-                          0: FlexColumnWidth(2),
-                          1: FlexColumnWidth(1),
-                          2: FlexColumnWidth(1),
-                          3: FlexColumnWidth(1),
+                          0: FlexColumnWidth(3),
+                          1: FlexColumnWidth(2),
+                          2: FlexColumnWidth(2),
+                          3: FlexColumnWidth(2),
+                          4: FlexColumnWidth(1),
                         },
                         children: [
                           const TableRow(
@@ -281,6 +282,12 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                               ),
+                              Padding(
+                                padding: EdgeInsets.all(1.0),
+                                child: Text('',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ),
                             ],
                           ),
                           for (var producto in _productosSeleccionados)
@@ -301,6 +308,16 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text('${producto.stock}'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Color.fromARGB(255, 217, 140, 32),
+                                    ),
+                                    onPressed: () {},
+                                  ),
                                 ),
                               ],
                             ),
