@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../database/db_helper.dart';
 import '../models/producto.dart';
 import './admnprinc.dart';
@@ -6,6 +7,7 @@ import './login.dart';
 import './ventas_dia.dart';
 import './busqueda.dart';
 import './inventario.dart';
+import '../models/ventas.dart';
 
 class PuntoDeVentaPage extends StatefulWidget {
   final String rol;
@@ -135,9 +137,8 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                         itemBuilder: (context, index) {
                           final producto = _productosEncontrados[index];
                           return ListTile(
-                            title: Text(producto.nombre),
-                            subtitle: Text(
-                                '${producto.sabor} - \$${producto.precio}'),
+                            title: Text(
+                                '${producto.nombre}  ${producto.sabor}  \$${producto.precio}'),
                             onTap: () => _seleccionarProducto(producto),
                           );
                         },
@@ -355,8 +356,39 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Lógica para vender panes
+                  onPressed: () async {
+                    if (_productosSeleccionados.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('No hay productos seleccionados')),
+                      );
+                      return;
+                    }
+
+                    // Calcular cantidad de productos
+                    final cantidad = _productosSeleccionados.length;
+                    final total = _calcularTotal();
+
+                    // Crear una nueva venta
+                    final nuevaVenta = Venta(cantidad: cantidad, total: total);
+
+                    // Guardar en la base de datos
+                    await _dbHelper.agregarVenta(nuevaVenta);
+                    var logger = Logger();
+
+                    // Usar el logger para imprimir la información
+                    logger.i(
+                        'venta:${nuevaVenta.idVenta}, ${nuevaVenta.cantidad}, ${nuevaVenta.total}');
+
+                    // Limpiar la lista de productos seleccionados
+                    setState(() {
+                      _productosSeleccionados.clear();
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Venta registrada con éxito')),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 217, 121),

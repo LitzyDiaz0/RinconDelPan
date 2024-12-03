@@ -147,7 +147,7 @@ class Ventas extends StatelessWidget {
                       label: Container(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'Img',
+                          'Id_Venta',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
                         ),
@@ -155,19 +155,9 @@ class Ventas extends StatelessWidget {
                     ),
                     DataColumn(
                       label: Container(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(15.0),
                         child: Text(
-                          'Nombre del Pan',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Container(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'pza',
+                          'Cantidad',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontFamily: 'Aleo'),
                         ),
@@ -184,18 +174,11 @@ class Ventas extends StatelessWidget {
                       ),
                     ),
                   ],
-                  rows: [
+                  rows: const [
                     DataRow(cells: [
-                      DataCell(Image.asset('assets/img/logo.png', width: 50)),
-                      DataCell(Text('Pan de Chocolate')),
-                      DataCell(Text('10')),
+                      DataCell(Text('1')),
+                      DataCell(Text('19')),
                       DataCell(Text('\$100')),
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Image.asset('assets/img/logo.png', width: 50)),
-                      DataCell(Text('Pan de Vainilla')),
-                      DataCell(Text('15')),
-                      DataCell(Text('\$150')),
                     ]),
                   ],
                 ),
