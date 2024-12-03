@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../database/db_helper.dart';
@@ -301,7 +303,7 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text('Stock',
+                          child: Text('Pan',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                         Padding(
@@ -327,9 +329,10 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                             child: Text('\$${producto.precio}'),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('${producto.stock}'),
-                          ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.file(
+                                File(producto.imagen),
+                              )),
                           Padding(
                             padding: const EdgeInsets.all(1.0),
                             child: IconButton(
