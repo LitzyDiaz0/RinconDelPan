@@ -116,7 +116,7 @@ class _InventarioPageState extends State<InventarioPage> {
                       child: const Icon(Icons.add, color: Colors.black),
                     ),
                     label: const Text(
-                      'Agregar ',
+                      'Agregar Pan',
                       style: TextStyle(color: Colors.black),
                     ),
                   ),

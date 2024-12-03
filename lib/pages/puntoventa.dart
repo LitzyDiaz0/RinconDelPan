@@ -1,14 +1,46 @@
 import 'package:flutter/material.dart';
+import '../database/db_helper.dart'; // Importa tu modelo Producto
+import '../models/producto.dart'; // Importa tu clase para acceso a la base de datos
 import './admnprinc.dart';
 import './login.dart';
 import './ventas_dia.dart';
 import './busqueda.dart';
 import './inventario.dart';
 
-class PuntoDeVentaPage extends StatelessWidget {
-  final String rol; // Agregamos el rol del usuario
+class PuntoDeVentaPage extends StatefulWidget {
+  final String rol;
 
   const PuntoDeVentaPage({super.key, required this.rol});
+
+  @override
+  _PuntoDeVentaPageState createState() => _PuntoDeVentaPageState();
+}
+
+class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
+  final TextEditingController _searchController = TextEditingController();
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+  List<Producto> _productosEncontrados = [];
+  final List<Producto> _productosSeleccionados = [];
+
+  void _buscarProductos(String query) async {
+    if (query.isEmpty) {
+      setState(() => _productosEncontrados = []);
+      return;
+    }
+
+    final productos = await _dbHelper.buscarProductos(query);
+    setState(() {
+      _productosEncontrados = productos;
+    });
+  }
+
+  void _seleccionarProducto(Producto producto) {
+    setState(() {
+      _productosSeleccionados.add(producto);
+      _productosEncontrados = [];
+      _searchController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,49 +48,41 @@ class PuntoDeVentaPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Contenido principal
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // AppBar con color café
+              // AppBar
               Container(
                 height: 80,
                 color: const Color.fromARGB(255, 135, 71, 15),
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                        iconSize: 40,
-                        onPressed: () {
-                          if (rol == 'empleado') {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AdminPage(
-                                  rol: '',
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      iconSize: 40,
+                      onPressed: () {
+                        if (widget.rol == 'empleado') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AdminPage(rol: ''),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 50),
+              // Título
               const Center(
                 child: Text(
                   'El Rincón del Pan',
@@ -70,22 +94,52 @@ class PuntoDeVentaPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
+              // Campo de búsqueda
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Nombre del pan a vender',
-                    prefixIcon: const Icon(
-                      Icons.bakery_dining,
-                      color: Color.fromRGBO(144, 73, 10, 1),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _searchController,
+                      onChanged: _buscarProductos,
+                      decoration: InputDecoration(
+                        labelText: 'Nombre del pan a vender',
+                        prefixIcon: const Icon(
+                          Icons.bakery_dining,
+                          color: Color.fromRGBO(144, 73, 10, 1),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
+                    if (_productosEncontrados.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _productosEncontrados.length,
+                          itemBuilder: (context, index) {
+                            final producto = _productosEncontrados[index];
+                            return ListTile(
+                              title: Text(producto.nombre),
+                              subtitle: Text(
+                                  '${producto.sabor} - \$${producto.precio}'),
+                              onTap: () => _seleccionarProducto(producto),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
                 ),
               ),
               const SizedBox(height: 25),
+              // Botones
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
@@ -115,7 +169,6 @@ class PuntoDeVentaPage extends StatelessWidget {
                         style: TextStyle(color: Colors.black, fontSize: 12),
                       ),
                     ),
-
                     ElevatedButton.icon(
                       onPressed: () {
                         Navigator.pushReplacement(
@@ -140,29 +193,18 @@ class PuntoDeVentaPage extends StatelessWidget {
                         style: TextStyle(color: Colors.black, fontSize: 12),
                       ),
                     ),
-                    // Botón Inventario
                     ElevatedButton.icon(
                       onPressed: () {
-                        if (rol == 'empleado') {
-                          // Si es empleado, muestra un mensaje de error
+                        if (widget.rol == 'empleado') {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text(
-                                'No tienes permisos suficientes para administrar el inventario.',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255)),
-                              ),
+                                  'No tienes permisos suficientes para administrar el inventario.'),
                               backgroundColor:
-                                  const Color.fromARGB(255, 255, 150, 90),
-                              duration: Duration(
-                                  seconds:
-                                      3), // Tiempo que el mensaje estará visible
+                                  Color.fromARGB(255, 255, 150, 90),
                             ),
                           );
                         } else {
-                          // Si no es empleado, redirige a la página de administrador
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -176,35 +218,25 @@ class PuntoDeVentaPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 10), // Botones más pequeños
+                            vertical: 8, horizontal: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(
-                            color: Colors.black, // Borde negro
-                            width: 1,
-                          ),
+                          side: const BorderSide(color: Colors.black, width: 1),
                         ),
                       ),
-                      icon: const Icon(
-                        Icons.inventory, // Icono para inventario
-                        color: Colors.black,
-                      ),
+                      icon: const Icon(Icons.inventory, color: Colors.black),
                       label: const Text(
                         'Inventario',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12), // Texto más pequeño
+                        style: TextStyle(color: Colors.black, fontSize: 12),
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 30),
-              // Tabla de productos
+              // Tabla de productos seleccionados
               Expanded(
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
@@ -219,80 +251,65 @@ class PuntoDeVentaPage extends StatelessWidget {
                           1: FlexColumnWidth(1),
                           2: FlexColumnWidth(1),
                           3: FlexColumnWidth(1),
-                          4: FlexColumnWidth(1),
                         },
                         children: [
-                          TableRow(
+                          const TableRow(
                             decoration: BoxDecoration(
-                                color:
-                                    const Color.fromARGB(255, 242, 216, 194)),
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Producto',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      fontFamily: 'Aleo'),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Sabor',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Total',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Aleo'),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Stock',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Aleo'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Ejemplo de fila
-                          TableRow(
+                                color: Color.fromARGB(255, 242, 216, 194)),
                             children: [
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text('Pan Integral'),
+                                child: Text('Producto',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ),
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text('\$10'),
+                                child: Text('Sabor',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
-                                color: const Color.fromARGB(255, 218, 255, 220),
-                                child: const Text('\$30'),
-                              ),
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Text('50'),
+                                child: Text('Precio',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Stock',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ),
                             ],
                           ),
+                          for (var producto in _productosSeleccionados)
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(producto.nombre),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(producto.sabor),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('\$${producto.precio}'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('${producto.stock}'),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-              // Botón Vender Panes
               Padding(
                 padding: const EdgeInsets.only(right: 16.0, bottom: 20.0),
                 child: Align(
