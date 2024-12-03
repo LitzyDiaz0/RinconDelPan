@@ -120,9 +120,10 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
                     Container(
                       margin: const EdgeInsets.only(top: 8),
                       decoration: BoxDecoration(
-                        color: Colors.yellow.shade100,
+                        color: const Color.fromARGB(255, 255, 246, 225),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey.shade300),
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 94, 65, 29)),
                       ),
                       child: ListView.separated(
                         shrinkWrap: true,
