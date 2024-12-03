@@ -16,7 +16,7 @@ class Ventas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+      backgroundColor: const Color.fromARGB(255, 249, 249, 249),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 237, 199),
         elevation: 0,
@@ -165,7 +165,7 @@ class Ventas extends StatelessWidget {
                       child: DataTable(
                         headingRowColor: WidgetStateColor.resolveWith(
                             (states) =>
-                                const Color.fromARGB(255, 240, 230, 140)),
+                                const Color.fromARGB(255, 240, 222, 140)),
                         columnSpacing: MediaQuery.of(context).size.width * 0.17,
                         // ignore: deprecated_member_use
                         dataRowHeight: 65,
