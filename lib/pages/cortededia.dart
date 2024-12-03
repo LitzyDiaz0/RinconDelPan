@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import './ventas_dia.dart';
 
 class CorteDelDiaPage extends StatelessWidget {
-  const CorteDelDiaPage({super.key});
+  final double panesVendidos;
+  final double dineroObtenido;
+
+  const CorteDelDiaPage({
+    super.key,
+    required this.panesVendidos,
+    required this.dineroObtenido,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +30,7 @@ class CorteDelDiaPage extends StatelessWidget {
             );
           },
         ),
-        automaticallyImplyLeading:
-            false, // Evita que el título de la appBar se coloque
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -69,7 +75,7 @@ class CorteDelDiaPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                     color: const Color.fromARGB(
@@ -77,7 +83,7 @@ class CorteDelDiaPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "Numero de panes vendidos: ",
+                    "Num. de panes vendidos: ",
                     style: TextStyle(fontSize: 18, fontFamily: 'Aleo'),
                   ),
                 ),
@@ -88,7 +94,7 @@ class CorteDelDiaPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "3", // Valor de cantidad de panes vendidos
+                    panesVendidos.toStringAsFixed(0), // Valor dinámico
                     style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Aleo',
@@ -127,11 +133,11 @@ class CorteDelDiaPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "\$600.00", // Valor de dinero obtenido
+                    "\$${dineroObtenido.toStringAsFixed(2)}", // Valor dinámico
                     style: TextStyle(
                       fontSize: 18, fontFamily: 'Aleo',
                       color: const Color.fromARGB(
-                          255, 0, 0, 0), // Texto blanco para contraste
+                          255, 0, 0, 0), // Texto negro para contraste
                       fontWeight: FontWeight.bold,
                     ),
                   ),

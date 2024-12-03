@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rincondelpan/pages/cortededia.dart';
 import './puntoventa.dart';
-import '../database/db_helper.dart'; // Asegúrate de importar tu archivo de DBHelper
-import '../models/ventas.dart'; // Asegúrate de importar tu modelo
+import '../database/db_helper.dart';
+import '../models/ventas.dart';
 
 class Ventas extends StatelessWidget {
   const Ventas({super.key});
@@ -27,8 +28,7 @@ class Ventas extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const PuntoDeVentaPage(rol: ''),
-              ),
+                  builder: (context) => const PuntoDeVentaPage(rol: '')),
             );
           },
         ),
@@ -57,7 +57,6 @@ class Ventas extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              // Botón de corte
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -66,8 +65,7 @@ class Ventas extends StatelessWidget {
                       side: const BorderSide(color: Colors.black, width: 1.5),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                     ),
@@ -76,7 +74,10 @@ class Ventas extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const PuntoDeVentaPage(rol: ''),
+                          builder: (context) => CorteDelDiaPage(
+                            panesVendidos: _totalCantidad,
+                            dineroObtenido: _totalTotal,
+                          ),
                         ),
                       );
                     },
@@ -84,18 +85,15 @@ class Ventas extends StatelessWidget {
                       children: const [
                         Icon(Icons.cut, color: Colors.black),
                         SizedBox(width: 8),
-                        Text(
-                          "Hacer corte",
-                          style: TextStyle(fontSize: 15, color: Colors.black),
-                        ),
+                        Text("Hacer corte",
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black)),
                       ],
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 6),
-
-              // Fecha alineada a la derecha
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -106,8 +104,6 @@ class Ventas extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 30),
-
-              // Título de Ventas
               Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -131,8 +127,6 @@ class Ventas extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-
-              // Tabla de Ventas
               FutureBuilder<List<Venta>>(
                 future: _fetchVentas(),
                 builder: (context, snapshot) {
@@ -146,6 +140,20 @@ class Ventas extends StatelessWidget {
                   }
 
                   final ventas = snapshot.data!;
+
+                  double totalCantidad = 0;
+                  double totalTotal = 0;
+
+                  // Sumar las cantidades y los totales
+                  for (var venta in ventas) {
+                    totalCantidad += venta.cantidad;
+                    totalTotal += venta.total;
+                  }
+
+                  // Guardar el totalCantidad y totalTotal
+                  _totalCantidad = totalCantidad;
+                  _totalTotal = totalTotal;
+
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Container(
@@ -164,48 +172,39 @@ class Ventas extends StatelessWidget {
                         columns: const [
                           DataColumn(
                             label: Center(
-                              child: Text(
-                                '# Venta',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Aleo'),
-                              ),
+                              child: Text('# Venta',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Aleo')),
                             ),
                           ),
                           DataColumn(
                             label: Center(
-                              child: Text(
-                                'Cantidad',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Aleo'),
-                              ),
+                              child: Text('Cantidad',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Aleo')),
                             ),
                           ),
                           DataColumn(
                             label: Center(
-                              child: Text(
-                                'Total',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Aleo'),
-                              ),
+                              child: Text('Total',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Aleo')),
                             ),
                           ),
                         ],
                         rows: ventas.map((venta) {
                           return DataRow(cells: [
+                            DataCell(
+                                Center(child: Text(venta.idVenta.toString()))),
                             DataCell(Center(
-                              child: Text(venta.idVenta.toString()),
-                            )),
+                                child:
+                                    Text('${venta.cantidad.toString()} Pzas'))),
                             DataCell(Center(
-                              child:
-                                  Text('${venta.cantidad.toString()}    Pzas'),
-                            )),
-                            DataCell(Center(
-                              child:
-                                  Text('\$${venta.total.toStringAsFixed(2)}'),
-                            )),
+                                child: Text(
+                                    '\$${venta.total.toStringAsFixed(2)}'))),
                           ]);
                         }).toList(),
                       ),
@@ -219,4 +218,8 @@ class Ventas extends StatelessWidget {
       ),
     );
   }
+
+  // Variables para almacenar el total de cantidades y totales
+  static double _totalCantidad = 0;
+  static double _totalTotal = 0;
 }
