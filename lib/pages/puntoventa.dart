@@ -58,36 +58,53 @@ class _PuntoDeVentaPageState extends State<PuntoDeVentaPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // AppBar
-            Container(
-              height: 80,
-              color: const Color.fromARGB(255, 135, 71, 15),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
-                    iconSize: 40,
-                    onPressed: () {
-                      if (widget.rol == 'empleado') {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ),
-                        );
-                      } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AdminPage(rol: ''),
-                          ),
-                        );
-                      }
-                    },
+            Stack(
+              children: [
+                // AppBar
+                Container(
+                  height: 100,
+                  color: const Color.fromARGB(255, 135, 71, 15),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        iconSize: 40,
+                        onPressed: () {
+                          if (widget.rol == 'empleado') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AdminPage(rol: ''),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                // Logo encima del AppBar
+                Positioned(
+                  top: 10, // Ajusta esta posición según sea necesario
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/img/logo.png', // Ruta de la imagen
+                      height: 85, // Ajusta el tamaño según sea necesario
+                    ),
+                  ),
+                ),
+              ],
             ),
+
             const SizedBox(height: 50),
             // Título
             const Center(
